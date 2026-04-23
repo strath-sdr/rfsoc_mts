@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="bram_player_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="bram_player_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="292.142 ns"></ZoomStartTime>
+      <ZoomEndTime time="360.293 ns"></ZoomEndTime>
+      <Cursor1Time time="241.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="250"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="3" />
+   <wvobject fp_name="group145" type="group">
+      <obj_property name="label">AXIS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/bram_player_tb/axis_resetn_tb" type="logic">
+         <obj_property name="ElementShortName">axis_resetn_tb</obj_property>
+         <obj_property name="ObjectShortName">axis_resetn_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/axis_aclk_tb" type="logic">
+         <obj_property name="ElementShortName">axis_aclk_tb</obj_property>
+         <obj_property name="ObjectShortName">axis_aclk_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/m_axis_tdata_tb" type="array">
+         <obj_property name="ElementShortName">m_axis_tdata_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m_axis_tdata_tb[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/m_axis_tvalid_tb" type="logic">
+         <obj_property name="ElementShortName">m_axis_tvalid_tb</obj_property>
+         <obj_property name="ObjectShortName">m_axis_tvalid_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/m_axis_tready_tb" type="logic">
+         <obj_property name="ElementShortName">m_axis_tready_tb</obj_property>
+         <obj_property name="ObjectShortName">m_axis_tready_tb</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group146" type="group">
+      <obj_property name="label">BRAM_A</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/bram_player_tb/din_tb" type="array">
+         <obj_property name="ElementShortName">din_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">din_tb[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/we_tb" type="array">
+         <obj_property name="ElementShortName">we_tb[3:0]</obj_property>
+         <obj_property name="ObjectShortName">we_tb[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/en_tb" type="logic">
+         <obj_property name="ElementShortName">en_tb</obj_property>
+         <obj_property name="ObjectShortName">en_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/dout_tb" type="array">
+         <obj_property name="ElementShortName">dout_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">dout_tb[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/addr_tb" type="array">
+         <obj_property name="ElementShortName">addr_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">addr_tb[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/clk_tb" type="logic">
+         <obj_property name="ElementShortName">clk_tb</obj_property>
+         <obj_property name="ObjectShortName">clk_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_player_tb/rst_tb" type="logic">
+         <obj_property name="ElementShortName">rst_tb</obj_property>
+         <obj_property name="ObjectShortName">rst_tb</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/bram_player_tb/enable_tb" type="logic">
+      <obj_property name="ElementShortName">enable_tb</obj_property>
+      <obj_property name="ObjectShortName">enable_tb</obj_property>
+      <obj_property name="CustomSignalColor">#FF0000</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+</wave_config>

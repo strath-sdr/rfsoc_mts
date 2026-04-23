@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="bram_capture_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="bram_capture_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="79.580 ns"></ZoomEndTime>
+      <Cursor1Time time="586.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="254"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject fp_name="group28" type="group">
+      <obj_property name="label">S_AXIS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/bram_capture_tb/s_axis_tdata_tb" type="array">
+         <obj_property name="ElementShortName">s_axis_tdata_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s_axis_tdata_tb[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/s_axis_tvalid_tb" type="logic">
+         <obj_property name="ElementShortName">s_axis_tvalid_tb</obj_property>
+         <obj_property name="ObjectShortName">s_axis_tvalid_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/axis_aclk_tb" type="logic">
+         <obj_property name="ElementShortName">axis_aclk_tb</obj_property>
+         <obj_property name="ObjectShortName">axis_aclk_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/axis_resetn_tb" type="logic">
+         <obj_property name="ElementShortName">axis_resetn_tb</obj_property>
+         <obj_property name="ObjectShortName">axis_resetn_tb</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group29" type="group">
+      <obj_property name="label">BRAM_A</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/bram_capture_tb/din_tb" type="array">
+         <obj_property name="ElementShortName">din_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">din_tb[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/we_tb" type="array">
+         <obj_property name="ElementShortName">we_tb[3:0]</obj_property>
+         <obj_property name="ObjectShortName">we_tb[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/en_tb" type="logic">
+         <obj_property name="ElementShortName">en_tb</obj_property>
+         <obj_property name="ObjectShortName">en_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/dout_tb" type="array">
+         <obj_property name="ElementShortName">dout_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">dout_tb[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/addr_tb" type="array">
+         <obj_property name="ElementShortName">addr_tb[31:0]</obj_property>
+         <obj_property name="ObjectShortName">addr_tb[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/clk_tb" type="logic">
+         <obj_property name="ElementShortName">clk_tb</obj_property>
+         <obj_property name="ObjectShortName">clk_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/rst_tb" type="logic">
+         <obj_property name="ElementShortName">rst_tb</obj_property>
+         <obj_property name="ObjectShortName">rst_tb</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/bram_capture_tb/trigger_tb" type="logic">
+      <obj_property name="ElementShortName">trigger_tb</obj_property>
+      <obj_property name="ObjectShortName">trigger_tb</obj_property>
+      <obj_property name="CustomSignalColor">#FF0000</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="group158" type="group">
+      <obj_property name="label">Probes</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/bram_capture_tb/probe_state_tb" type="logic">
+         <obj_property name="ElementShortName">probe_state_tb</obj_property>
+         <obj_property name="ObjectShortName">probe_state_tb</obj_property>
+      </wvobject>
+      <wvobject fp_name="/bram_capture_tb/probe_trigger_re_tb" type="logic">
+         <obj_property name="ElementShortName">probe_trigger_re_tb</obj_property>
+         <obj_property name="ObjectShortName">probe_trigger_re_tb</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
