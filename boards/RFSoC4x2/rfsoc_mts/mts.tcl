@@ -723,7 +723,7 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   # Create instance: smartconnect, and set properties
   set smartconnect [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect ]
   set_property -dict [list \
-    CONFIG.NUM_MI {6} \
+    CONFIG.NUM_MI {5} \
     CONFIG.NUM_SI {1} \
   ] $smartconnect
 
@@ -755,7 +755,7 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   connect_bd_intf_net -intf_net S_AXI_2 [get_bd_intf_pins adc_c/S_AXI] [get_bd_intf_pins smartconnect/M01_AXI]
   connect_bd_intf_net -intf_net S_AXI_3 [get_bd_intf_pins adc_d/S_AXI] [get_bd_intf_pins smartconnect/M00_AXI]
   connect_bd_intf_net -intf_net smartconnect_M02_AXI [get_bd_intf_pins smartconnect/M02_AXI] [get_bd_intf_pins adc_b/S_AXI]
-  connect_bd_intf_net -intf_net smartconnect_M05_AXI [get_bd_intf_pins smartconnect/M05_AXI] [get_bd_intf_pins gpio_trigger/S_AXI]
+  connect_bd_intf_net -intf_net smartconnect_M04_AXI [get_bd_intf_pins smartconnect/M04_AXI] [get_bd_intf_pins gpio_trigger/S_AXI]
 
   # Create port connections
   connect_bd_net -net aresetn_1  [get_bd_pins s_axis_aresetn] \
