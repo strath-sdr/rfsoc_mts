@@ -5,17 +5,26 @@
 # -------------- -------------- -------------- -------------- -------------- -------------- -------
 # Pin Assignments -- all other pins handled by board BSP
 # -------------- -------------- -------------- -------------- -------------- -------------- -------
-set_property PACKAGE_PIN AP18 [get_ports pl_sysref_p]
-set_property PACKAGE_PIN AR18 [get_ports pl_sysref_n]
+##
+set_property PACKAGE_PIN B10 [get_ports pl_sysref_p]
+set_property PACKAGE_PIN B9 [get_ports pl_sysref_n]
 
-set_property IOSTANDARD LVDS [get_ports {pl_sysref_p}]
-set_property IOSTANDARD LVDS [get_ports {pl_sysref_n}]
+set_property IOSTANDARD LVDS_25 [get_ports {pl_sysref_p}]
+set_property IOSTANDARD LVDS_25 [get_ports {pl_sysref_n}]
 
-set_property PACKAGE_PIN AN11 [get_ports pl_clk_p]
-set_property PACKAGE_PIN AP11 [get_ports pl_clk_n]
+##
+set_property PACKAGE_PIN B8 [get_ports pl_clk_p]
+set_property PACKAGE_PIN B7 [get_ports pl_clk_n]
 
-set_property IOSTANDARD LVDS [get_ports {pl_clk_p}]
-set_property IOSTANDARD LVDS [get_ports {pl_clk_n}]
+set_property IOSTANDARD LVDS_25 [get_ports {pl_clk_p}]
+set_property IOSTANDARD LVDS_25 [get_ports {pl_clk_n}]
+
+##
+set_property PACKAGE_PIN C11 [get_ports {clk104_clk_spi_mux_sel_tri_o[0]}]
+set_property PACKAGE_PIN B12 [get_ports {clk104_clk_spi_mux_sel_tri_o[1]}]
+
+set_property IOSTANDARD LVCMOS12 [get_ports {clk104_clk_spi_mux_sel_tri_o[0]}]
+set_property IOSTANDARD LVCMOS12 [get_ports {clk104_clk_spi_mux_sel_tri_o[1]}]
 
 
 # -------------- -------------- -------------- -------------- -------------- -------------- -------
