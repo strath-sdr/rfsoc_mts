@@ -1233,12 +1233,12 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   # Create instance: adc_10
   create_hier_cell_adc_10 $hier_obj adc_10
 
-  # Create instance: gpio_trigger, and set properties
-  set gpio_trigger [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 gpio_trigger ]
+  # Create instance: signal_capture_trigger, and set properties
+  set signal_capture_trigger [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 signal_capture_trigger ]
   set_property -dict [list \
     CONFIG.C_ALL_OUTPUTS {1} \
     CONFIG.C_GPIO_WIDTH {1} \
-  ] $gpio_trigger
+  ] $signal_capture_trigger
 
 
   # Create instance: adc_22
@@ -1271,7 +1271,7 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   connect_bd_intf_net -intf_net smartconnect_M05_AXI [get_bd_intf_pins smartconnect/M05_AXI] [get_bd_intf_pins adc_22/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_M06_AXI [get_bd_intf_pins smartconnect/M06_AXI] [get_bd_intf_pins adc_30/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_M07_AXI [get_bd_intf_pins smartconnect/M07_AXI] [get_bd_intf_pins adc_32/S_AXI]
-  connect_bd_intf_net -intf_net smartconnect_M08_AXI [get_bd_intf_pins gpio_trigger/S_AXI] [get_bd_intf_pins smartconnect/M08_AXI]
+  connect_bd_intf_net -intf_net smartconnect_M08_AXI [get_bd_intf_pins signal_capture_trigger/S_AXI] [get_bd_intf_pins smartconnect/M08_AXI]
 
   # Create port connections
   connect_bd_net -net aresetn_1  [get_bd_pins s_axis_aresetn] \
@@ -1289,7 +1289,7 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   [get_bd_pins adc_10/m_axis_aclk] \
   [get_bd_pins adc_02/m_axis_aclk] \
   [get_bd_pins smartconnect/aclk] \
-  [get_bd_pins gpio_trigger/s_axi_aclk] \
+  [get_bd_pins signal_capture_trigger/s_axi_aclk] \
   [get_bd_pins adc_22/m_axis_aclk] \
   [get_bd_pins adc_30/m_axis_aclk] \
   [get_bd_pins adc_32/m_axis_aclk] \
@@ -1300,7 +1300,7 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   [get_bd_pins adc_10/m_axis_aresetn] \
   [get_bd_pins adc_12/m_axis_aresetn] \
   [get_bd_pins smartconnect/aresetn] \
-  [get_bd_pins gpio_trigger/s_axi_aresetn] \
+  [get_bd_pins signal_capture_trigger/s_axi_aresetn] \
   [get_bd_pins adc_22/m_axis_aresetn] \
   [get_bd_pins adc_30/m_axis_aresetn] \
   [get_bd_pins adc_32/m_axis_aresetn] \
@@ -1314,7 +1314,7 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   [get_bd_pins adc_30/s_axis_aclk] \
   [get_bd_pins adc_32/s_axis_aclk] \
   [get_bd_pins adc_20/s_axis_aclk]
-  connect_bd_net -net trig_cap_1  [get_bd_pins gpio_trigger/gpio_io_o] \
+  connect_bd_net -net trig_cap_1  [get_bd_pins signal_capture_trigger/gpio_io_o] \
   [get_bd_pins adc_00/trigger] \
   [get_bd_pins adc_02/trigger] \
   [get_bd_pins adc_10/trigger] \
@@ -1557,6 +1557,10 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
   # Create interface pins
   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI_LITE
 
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 pl_clk
+
+  create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 pl_sysref
+
 
   # Create pins
   create_bd_pin -dir O -from 0 -to 0 user_sysref
@@ -1567,10 +1571,6 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
   create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_500M
   create_bd_pin -dir O -type intr irq
   create_bd_pin -dir I -type clk s_axi_aclk
-  create_bd_pin -dir I -from 0 -to 0 -type clk pl_sysref_p
-  create_bd_pin -dir I -from 0 -to 0 -type clk pl_clk_p
-  create_bd_pin -dir I -from 0 -to 0 -type clk pl_clk_n
-  create_bd_pin -dir I -from 0 -to 0 -type clk pl_sysref_n
 
   # Create instance: MTSclkwiz, and set properties
   set MTSclkwiz [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 MTSclkwiz ]
@@ -1650,6 +1650,8 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
 
 
   # Create interface connections
+  connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins ibufds_pl_clk/CLK_IN_D] [get_bd_intf_pins pl_clk]
+  connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins ibufds_pl_sysref/CLK_IN_D] [get_bd_intf_pins pl_sysref]
   connect_bd_intf_net -intf_net control_interconnect_M07_AXI [get_bd_intf_pins S_AXI_LITE] [get_bd_intf_pins MTSclkwiz/s_axi_lite]
 
   # Create port connections
@@ -1673,14 +1675,6 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
   [get_bd_pins synch_sysref/src_in]
   connect_bd_net -net pl_clk_ibufds_IBUF_OUT  [get_bd_pins ibufds_pl_clk/IBUF_OUT] \
   [get_bd_pins bufg_pl_clk/BUFG_I]
-  connect_bd_net -net pl_clk_n_1  [get_bd_pins pl_clk_n] \
-  [get_bd_pins ibufds_pl_clk/IBUF_DS_N]
-  connect_bd_net -net pl_clk_p_1  [get_bd_pins pl_clk_p] \
-  [get_bd_pins ibufds_pl_clk/IBUF_DS_P]
-  connect_bd_net -net pl_sysref_n_1  [get_bd_pins pl_sysref_n] \
-  [get_bd_pins ibufds_pl_sysref/IBUF_DS_N]
-  connect_bd_net -net pl_sysref_p_1  [get_bd_pins pl_sysref_p] \
-  [get_bd_pins ibufds_pl_sysref/IBUF_DS_P]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins s_axi_resetn] \
   [get_bd_pins MTSclkwiz/s_axi_aresetn] \
   [get_bd_pins proc_sys_reset_500M/ext_reset_in] \
@@ -1752,8 +1746,6 @@ proc create_root_design { parentCell } {
 
   set vout20 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout20 ]
 
-  set sysref_in [ create_bd_intf_port -mode Slave -vlnv xilinx.com:display_usp_rf_data_converter:diff_pins_rtl:1.0 sysref_in ]
-
   set vin1_23 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin1_23 ]
 
   set vin3_01 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin3_01 ]
@@ -1775,12 +1767,20 @@ proc create_root_design { parentCell } {
 
   set vout32 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout32 ]
 
+  set pl_clk [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 pl_clk ]
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {500000000} \
+   ] $pl_clk
+
+  set sysref_in [ create_bd_intf_port -mode Slave -vlnv xilinx.com:display_usp_rf_data_converter:diff_pins_rtl:1.0 sysref_in ]
+
+  set pl_sysref [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 pl_sysref ]
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {5000000} \
+   ] $pl_sysref
+
 
   # Create ports
-  set pl_clk_p [ create_bd_port -dir I -from 0 -to 0 -type clk -freq_hz 500000000 pl_clk_p ]
-  set pl_sysref_p [ create_bd_port -dir I -from 0 -to 0 pl_sysref_p ]
-  set pl_clk_n [ create_bd_port -dir I -from 0 -to 0 -type clk -freq_hz 500000000 pl_clk_n ]
-  set pl_sysref_n [ create_bd_port -dir I -from 0 -to 0 pl_sysref_n ]
 
   # Create instance: clocktree
   create_hier_cell_clocktree [current_bd_instance .] clocktree
@@ -3038,6 +3038,8 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_intf_net -intf_net axis_combiner_m32_axis [get_bd_intf_pins axis_combiner/m32_axis] [get_bd_intf_pins signal_capture/AXIS_ADC_32]
   connect_bd_intf_net -intf_net dac0_clk_1 [get_bd_intf_ports dac0_clk] [get_bd_intf_pins rfdc/dac0_clk]
   connect_bd_intf_net -intf_net dac2_clk_1 [get_bd_intf_ports dac2_clk] [get_bd_intf_pins rfdc/dac2_clk]
+  connect_bd_intf_net -intf_net pl_clk_1 [get_bd_intf_ports pl_clk] [get_bd_intf_pins clocktree/pl_clk]
+  connect_bd_intf_net -intf_net pl_sysref_1 [get_bd_intf_ports pl_sysref] [get_bd_intf_pins clocktree/pl_sysref]
   connect_bd_intf_net -intf_net rfdc_m00_axis [get_bd_intf_pins rfdc/m00_axis] [get_bd_intf_pins axis_combiner/s00_axis]
   connect_bd_intf_net -intf_net rfdc_m01_axis [get_bd_intf_pins rfdc/m01_axis] [get_bd_intf_pins axis_combiner/s01_axis]
   connect_bd_intf_net -intf_net rfdc_m02_axis [get_bd_intf_pins rfdc/m02_axis] [get_bd_intf_pins axis_combiner/s02_axis]
@@ -3134,16 +3136,6 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   [get_bd_pins rfdc/user_sysref_adc]
   connect_bd_net -net clocktree_irq  [get_bd_pins clocktree/irq] \
   [get_bd_pins irq_concat/In0]
-  connect_bd_net -net pl_clk_n_1  [get_bd_ports pl_clk_n] \
-  [get_bd_pins clocktree/pl_clk_n]
-  connect_bd_net -net pl_clk_p_1  [get_bd_ports pl_clk_p] \
-  [get_bd_pins clocktree/pl_clk_p]
-  connect_bd_net -net pl_sysref_n_1  [get_bd_ports pl_sysref_n] \
-  [get_bd_pins clocktree/pl_sysref_n] \
-  [get_bd_pins rfdc/sysref_in_n]
-  connect_bd_net -net pl_sysref_p_1  [get_bd_ports pl_sysref_p] \
-  [get_bd_pins clocktree/pl_sysref_p] \
-  [get_bd_pins rfdc/sysref_in_p]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins proc_sys_reset/peripheral_aresetn] \
   [get_bd_pins clocktree/s_axi_resetn] \
   [get_bd_pins smartconnect_hpm0/aresetn] \
@@ -3176,7 +3168,7 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   assign_bd_address -offset 0xB001C000 -range 0x00004000 -with_name SEG_bram_ctrl_Mem0_7 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/adc_30/bram_ctrl/S_AXI/Mem0] -force
   assign_bd_address -offset 0xB0040000 -range 0x00004000 -with_name SEG_bram_ctrl_Mem0_8 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/adc_32/bram_ctrl/S_AXI/Mem0] -force
   assign_bd_address -offset 0xB0030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_player/gpio_enable/S_AXI/Reg] -force
-  assign_bd_address -offset 0xB0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/gpio_trigger/S_AXI/Reg] -force
+  assign_bd_address -offset 0xB0020000 -range 0x00010000 -with_name SEG_gpio_trigger_Reg -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/signal_capture_trigger/S_AXI/Reg] -force
   assign_bd_address -offset 0xA0040000 -range 0x00040000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs rfdc/s_axi/Reg] -force
 
 
