@@ -1726,10 +1726,6 @@ proc create_root_design { parentCell } {
 
 
   # Create interface ports
-  set adc2_clk [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 adc2_clk ]
-
-  set dac2_clk [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 dac2_clk ]
-
   set vin0_01 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin0_01 ]
 
   set vin0_23 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin0_23 ]
@@ -1752,11 +1748,6 @@ proc create_root_design { parentCell } {
 
   set vin3_23 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin3_23 ]
 
-  set dac0_clk [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 dac0_clk ]
-  set_property -dict [ list \
-   CONFIG.FREQ_HZ {4000000000.0} \
-   ] $dac0_clk
-
   set vout02 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout02 ]
 
   set vout12 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout12 ]
@@ -1778,6 +1769,16 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.FREQ_HZ {5000000} \
    ] $pl_sysref
+
+  set adc2_clk [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 adc2_clk ]
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {500000000.0} \
+   ] $adc2_clk
+
+  set dac2_clk [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 dac2_clk ]
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {500000000.0} \
+   ] $dac2_clk
 
 
   # Create ports
@@ -2875,12 +2876,12 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
     CONFIG.ADC1_PLL_Enable {false} \
     CONFIG.ADC1_Refclk_Freq {4000.000} \
     CONFIG.ADC1_Sampling_Rate {4.0} \
-    CONFIG.ADC2_Clock_Dist {1} \
+    CONFIG.ADC2_Clock_Dist {2} \
     CONFIG.ADC2_Clock_Source {2} \
     CONFIG.ADC2_Multi_Tile_Sync {true} \
     CONFIG.ADC2_Outclk_Freq {250.000} \
-    CONFIG.ADC2_PLL_Enable {false} \
-    CONFIG.ADC2_Refclk_Freq {4000.000} \
+    CONFIG.ADC2_PLL_Enable {true} \
+    CONFIG.ADC2_Refclk_Freq {500.000} \
     CONFIG.ADC2_Sampling_Rate {4.0} \
     CONFIG.ADC3_Clock_Source {2} \
     CONFIG.ADC3_Multi_Tile_Sync {true} \
@@ -2945,7 +2946,7 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
     CONFIG.ADC_Slice32_Enable {true} \
     CONFIG.Axiclk_Freq {100.0} \
     CONFIG.DAC0_Clock_Dist {0} \
-    CONFIG.DAC0_Clock_Source {4} \
+    CONFIG.DAC0_Clock_Source {6} \
     CONFIG.DAC0_Multi_Tile_Sync {true} \
     CONFIG.DAC0_Outclk_Freq {250.000} \
     CONFIG.DAC0_PLL_Enable {false} \
@@ -2957,11 +2958,11 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
     CONFIG.DAC1_PLL_Enable {false} \
     CONFIG.DAC1_Refclk_Freq {4000.000} \
     CONFIG.DAC1_Sampling_Rate {4.0} \
-    CONFIG.DAC2_Clock_Dist {1} \
+    CONFIG.DAC2_Clock_Dist {2} \
     CONFIG.DAC2_Multi_Tile_Sync {true} \
     CONFIG.DAC2_Outclk_Freq {250.000} \
-    CONFIG.DAC2_PLL_Enable {false} \
-    CONFIG.DAC2_Refclk_Freq {4000.000} \
+    CONFIG.DAC2_PLL_Enable {true} \
+    CONFIG.DAC2_Refclk_Freq {500.000} \
     CONFIG.DAC2_Sampling_Rate {4.0} \
     CONFIG.DAC3_Clock_Source {6} \
     CONFIG.DAC3_Multi_Tile_Sync {true} \
@@ -3036,7 +3037,6 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_intf_net -intf_net axis_combiner_m22_axis [get_bd_intf_pins axis_combiner/m22_axis] [get_bd_intf_pins signal_capture/AXIS_ADC_22]
   connect_bd_intf_net -intf_net axis_combiner_m30_axis [get_bd_intf_pins axis_combiner/m30_axis] [get_bd_intf_pins signal_capture/AXIS_ADC_30]
   connect_bd_intf_net -intf_net axis_combiner_m32_axis [get_bd_intf_pins axis_combiner/m32_axis] [get_bd_intf_pins signal_capture/AXIS_ADC_32]
-  connect_bd_intf_net -intf_net dac0_clk_1 [get_bd_intf_ports dac0_clk] [get_bd_intf_pins rfdc/dac0_clk]
   connect_bd_intf_net -intf_net dac2_clk_1 [get_bd_intf_ports dac2_clk] [get_bd_intf_pins rfdc/dac2_clk]
   connect_bd_intf_net -intf_net pl_clk_1 [get_bd_intf_ports pl_clk] [get_bd_intf_pins clocktree/pl_clk]
   connect_bd_intf_net -intf_net pl_sysref_1 [get_bd_intf_ports pl_sysref] [get_bd_intf_pins clocktree/pl_sysref]
