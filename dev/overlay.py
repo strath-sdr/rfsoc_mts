@@ -25,16 +25,10 @@ RFSOC4X2_DAC_TILES = 0b0101
 RFSOC4X2_ADC_TILES = 0b0101
 
 ZCU208_LMK_FREQ = 500.0
-ZCU208_LMX_FREQ = 4000.0
-ZCU208_DAC_TILES = 0b0011
-ZCU208_ADC_TILES = 0b0011
-
-ADC_MAP = {
-    "ADC_A": 0,
-    "ADC_B": 1,
-    "ADC_C": 2,
-    "ADC_D": 3,
-}
+#ZCU208_LMX_FREQ = 4000.0
+ZCU208_LMX_FREQ = 500.0
+ZCU208_DAC_TILES = 0b1111
+ZCU208_ADC_TILES = 0b1111
 
 class Overlay(Overlay):
     """
@@ -77,8 +71,8 @@ class Overlay(Overlay):
             lmx_freq = lmx_freq
         )
         
-        #self.rfdc.dac_tiles[DAC_REFERENCE_TILE].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
-        #self.rfdc.adc_tiles[ADC_REFERENCE_TILE].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
+        self.rfdc.dac_tiles[DAC_REFERENCE_TILE].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
+        self.rfdc.adc_tiles[ADC_REFERENCE_TILE].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
         
         self.mts = MultiTileSynchronisation(
             rfdc = self.rfdc,
