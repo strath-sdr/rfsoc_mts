@@ -5,21 +5,15 @@
 # -------------- -------------- -------------- -------------- -------------- -------------- -------
 # Pin Assignments -- all other pins handled by board BSP
 # -------------- -------------- -------------- -------------- -------------- -------------- -------
-#set_property PACKAGE_PIN AP18 [get_ports pl_sysref_p]
-#set_property PACKAGE_PIN AR18 [get_ports pl_sysref_n]
-#set_property IOSTANDARD LVDS [get_ports {pl_sysref_p}]
-#set_property IOSTANDARD LVDS [get_ports {pl_sysref_n}]
-
 set_property PACKAGE_PIN AP18 [get_ports {pl_sysref_clk_p[0]}]
-set_property IOSTANDARD LVDS [get_ports {pl_sysref_clk_p[0] pl_sysref_clk_n[0]}]
+set_property PACKAGE_PIN AR18 [get_ports {pl_sysref_clk_n[0]}]
+set_property IOSTANDARD LVDS [get_ports {pl_sysref_clk_p[0]}]
+set_property IOSTANDARD LVDS [get_ports {pl_sysref_clk_n[0]}]
 
-#set_property PACKAGE_PIN AN11 [get_ports pl_clk_p]
-#set_property PACKAGE_PIN AP11 [get_ports pl_clk_n]
-#set_property IOSTANDARD LVDS [get_ports {pl_clk_p}]
-#set_property IOSTANDARD LVDS [get_ports {pl_clk_n}]
 set_property PACKAGE_PIN AN11 [get_ports {pl_clk_clk_p[0]}]
-set_property IOSTANDARD LVDS [get_ports {pl_clk_clk_p[0] pl_clk_clk_n[0]}]
-
+set_property PACKAGE_PIN AP11 [get_ports {pl_clk_clk_n[0]}]
+set_property IOSTANDARD LVDS [get_ports {pl_clk_clk_p[0]}]
+set_property IOSTANDARD LVDS [get_ports {pl_clk_clk_n[0]}]
 
 # -------------- -------------- -------------- -------------- -------------- -------------- -------
 # Synthesis Guidance
@@ -37,11 +31,8 @@ create_clock -period 2.000 -name pl_clk [get_ports {pl_clk_clk_p[0]}]
 
 
 ## Input Delay for PL_SYSREF to ensure MTS requirements via PG269
-#set_input_delay -clock [get_clocks pl_clk] -min -add_delay 2.000 [get_ports pl_sysref_p]
-#set_input_delay -clock [get_clocks pl_clk] -max -add_delay 2.031 [get_ports pl_sysref_p]
 set_input_delay -clock [get_clocks pl_clk] -min -add_delay 2.000 [get_ports {pl_sysref_clk_p[0]}]
 set_input_delay -clock [get_clocks pl_clk] -max -add_delay 2.031 [get_ports {pl_sysref_clk_p[0]}]
-
 
 set_property CLOCK_DEDICATED_ROUTE ANY_CMT_COLUMN [get_nets mts_i/clocktree/bufg_pl_clk/U0/BUFG_O[0]]
 
