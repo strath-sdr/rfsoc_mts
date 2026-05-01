@@ -1,0 +1,1 @@
+The RFSoC AXI4-Stream Combiner IP core packs the In-phase (I) and Quadrature (Q) output streams from each RF-ADC block within the Zynq UltraScale+ RF Data Converter into a single IQ data word. This helps to tidy the Vivado block design.
