@@ -39,6 +39,11 @@
  </p>
  
  Run the code below in the jupyter terminal to install the Spectrum Analyser.
+ <div class="alert alert-box alert-danger">
+<b>Caution:</b>
+    The commands below will alter the <i>xrfdc</i> package included with PYNQ. If you have made changes to this package, you should save them before installing this repository.
+</div>
+
  ```sh
  pip3 install git+https://github.com/strath-sdr/rfsoc-mts
  cd /rfsoc-mts
