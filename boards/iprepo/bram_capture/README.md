@@ -1,0 +1,1 @@
+The BRAM Capture IP core includes a trigger input. Upon detection of a rising edge, the core captures a packet of consecutive valid samples from an input AXI4-Stream interface and writes them to memory until the final address is reached.
