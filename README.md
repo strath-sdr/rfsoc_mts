@@ -23,11 +23,10 @@
  </p>
  
  ## Quick Start
- Follow the instructions below to install the Multi-Tile Synchronisation (MTS) Demonstrator now.
- 1.  Power on your RFSoC development board with an SD Card containing a fresh PYNQ v3.0.1 image or greater.
- 2.  Navigate to Jupyter Labs by opening a browser (preferably Chrome) and connecting to `http://<board_ip_address>:9090/lab`.
- 3. If you <b>cannot</b> share WiFi to the RFSoC board, download this GitHub repository as a zipped folder. Then drag-and-drop it into the Jupyter Labs workspace directory. If you <b>can</b> share WiFi with the board then skip this step.
- 4. We need to open a terminal in Jupyter Lab. Firstly, open a launcher window as shown in the figure below:
+ Follow the instructions below to install the Multi-Tile Synchronisation (MTS) Demonstrator now. <b>You will need to give your board access to the internet</b>.
+ *  Power on your RFSoC development board with an SD Card containing a fresh PYNQ v3.0.1 image or greater.
+ *  Navigate to Jupyter Labs by opening a browser (preferably Chrome) and connecting to `http://<board_ip_address>:9090/lab`.
+ * We need to open a terminal in Jupyter Lab. Firstly, open a launcher window as shown in the figure below:
  
  <p align="center">
    <img src="./open_jupyter_launcher.jpg" width="50%" height="50%" />
@@ -39,16 +38,11 @@
    <img src="./open_terminal_window.jpg" width="50%" height="50%" />
  </p>
  
- If you carried out step (3), then run the command below in the terminal to install the RFSoC MTS Demonstrator.
-
- ```sh
- mv /home/xilinx/jupyter_notebooks/rfsoc-mts-main.zip /
- unzip rfsoc-mts-main.zip
- cd /rfsoc-mts-main
- bash install.sh
- ```
- 
-Otherwise, your board has access to WiFi, and you can instead run the following command in the terminal.
+ Run the code below in the jupyter terminal to install the Spectrum Analyser.
+ <div class="alert alert-box alert-danger">
+<b>Caution:</b>
+    The commands below will alter the <i>xrfdc</i> package included with PYNQ. If you have made changes to this package, you should save them before installing this repository.
+</div>
 
  ```sh
  pip3 install git+https://github.com/strath-sdr/rfsoc-mts
@@ -57,6 +51,15 @@ Otherwise, your board has access to WiFi, and you can instead run the following 
  ```
  
  Once installation has complete you will find the Multi-Tile Synchronisation notebooks in the Jupyter workspace directory. The folder will be named 'rfsoc-mts'.
+
+ ### For internal use
+ While this repository is not publicly available, you won't be able to ```pip3 install``` the sitory. Therefore, you will need to download the repository as a zip and drag-and-drop it into the Jupyter Labs workspace directory. After doing so open the terminal and run the following commands
+ ```sh
+ mv /home/xilinx/jupyter_notebooks/rfsoc-mts-main.zip /
+ unzip rfsoc-mts-main.zip
+ cd /rfsoc-mts-main
+ bash install.sh
+ ```
  
  ## Using the Project Files
  The following software is required to use the project files in this repository.

@@ -1,5 +1,10 @@
+__author__ = "Ryan Provan"
+__organisation__ = "The Univeristy of Strathclyde"
+__support__ = "https://github.com/strath-sdr/rfsoc-mts"
+
 from pynq import DefaultHierarchy, MMIO
 import numpy as np
+from time import sleep
 
 
 
@@ -84,6 +89,7 @@ class SignalCapture(DefaultHierarchy):
         buffer = np.zeros((4, int(self.length/2)), dtype=np.complex64)
 
         self.trigger()
+        sleep(0.1)
 
         buffer[0] = self.chA_mmio_array[0::2] + 1j*self.chA_mmio_array[1::2]
         buffer[1] = self.chB_mmio_array[0::2] + 1j*self.chB_mmio_array[1::2]
