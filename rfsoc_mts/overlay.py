@@ -80,7 +80,7 @@ class Overlay(Overlay):
         
         self.mts = MultiTileSynchronisation(
             rfdc = self.rfdc,
-            clkwiz = self.clocktree.MTSclkwiz,
+            clkwiz = self.sysref_capture.clkwiz,
             dac_active = active_dac_tiles,
             adc_active = active_adc_tiles,
             dac_reftile = DAC_REFERENCE_TILE,

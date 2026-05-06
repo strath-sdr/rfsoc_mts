@@ -940,7 +940,8 @@ proc create_hier_cell_signal_player { parentCell nameHier } {
   connect_bd_net -net Net  [get_bd_pins m_axis_aresetn] \
   [get_bd_pins axis_clock_converter/m_axis_aresetn] \
   [get_bd_pins axis_dwidth_converter/aresetn] \
-  [get_bd_pins axis_register_slice/aresetn]
+  [get_bd_pins axis_register_slice/aresetn] \
+  [get_bd_pins axis_broadcaster/aresetn]
   connect_bd_net -net Net1  [get_bd_pins s_axis_aclk] \
   [get_bd_pins bram_ctrl/s_axi_aclk] \
   [get_bd_pins axis_clock_converter/s_axis_aclk] \
@@ -952,8 +953,7 @@ proc create_hier_cell_signal_player { parentCell nameHier } {
   [get_bd_pins axis_clock_converter/s_axis_aresetn] \
   [get_bd_pins bram_player/axis_resetn] \
   [get_bd_pins gpio_enable/s_axi_aresetn] \
-  [get_bd_pins smartconnect_0/aresetn] \
-  [get_bd_pins axis_broadcaster/aresetn]
+  [get_bd_pins smartconnect_0/aresetn]
   connect_bd_net -net clk_wiz_adc1_clk_out1  [get_bd_pins m_axis_aclk] \
   [get_bd_pins axis_clock_converter/m_axis_aclk] \
   [get_bd_pins axis_dwidth_converter/aclk] \
@@ -966,13 +966,13 @@ proc create_hier_cell_signal_player { parentCell nameHier } {
   current_bd_instance $oldCurInst
 }
 
-# Hierarchical cell: clocktree
-proc create_hier_cell_clocktree { parentCell nameHier } {
+# Hierarchical cell: sysref_capture
+proc create_hier_cell_sysref_capture { parentCell nameHier } {
 
   variable script_folder
 
   if { $parentCell eq "" || $nameHier eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_clocktree() - Empty argument(s)!"}
+     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_sysref_capture() - Empty argument(s)!"}
      return
   }
 
@@ -1010,16 +1010,14 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
 
   # Create pins
   create_bd_pin -dir O -from 0 -to 0 user_sysref
-  create_bd_pin -dir O -type clk clk_500M
-  create_bd_pin -dir O -type clk clk_250M
-  create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_250M
+  create_bd_pin -dir O -type clk user_clk
   create_bd_pin -dir I -type rst s_axi_resetn
-  create_bd_pin -dir O -from 0 -to 0 -type rst aresetn_500M
+  create_bd_pin -dir O -from 0 -to 0 -type rst user_aresetn
   create_bd_pin -dir O -type intr irq
   create_bd_pin -dir I -type clk s_axi_aclk
 
-  # Create instance: MTSclkwiz, and set properties
-  set MTSclkwiz [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 MTSclkwiz ]
+  # Create instance: clkwiz, and set properties
+  set clkwiz [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clkwiz ]
   set_property -dict [list \
     CONFIG.AUTO_PRIMITIVE {MMCM} \
     CONFIG.CLKIN1_JITTER_PS {0.10} \
@@ -1027,16 +1025,16 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
     CONFIG.CLKIN2_JITTER_PS {100.000} \
     CONFIG.CLKIN2_UI_JITTER {100.000} \
     CONFIG.CLKOUT1_DRIVES {Buffer} \
-    CONFIG.CLKOUT1_JITTER {68.289} \
+    CONFIG.CLKOUT1_JITTER {67.875} \
     CONFIG.CLKOUT1_MATCHED_ROUTING {true} \
-    CONFIG.CLKOUT1_PHASE_ERROR {66.020} \
+    CONFIG.CLKOUT1_PHASE_ERROR {64.867} \
     CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {500.0} \
     CONFIG.CLKOUT2_DRIVES {Buffer} \
     CONFIG.CLKOUT2_JITTER {78.335} \
-    CONFIG.CLKOUT2_MATCHED_ROUTING {true} \
+    CONFIG.CLKOUT2_MATCHED_ROUTING {false} \
     CONFIG.CLKOUT2_PHASE_ERROR {66.020} \
     CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {250.0} \
-    CONFIG.CLKOUT2_USED {true} \
+    CONFIG.CLKOUT2_USED {false} \
     CONFIG.CLKOUT3_DRIVES {Buffer} \
     CONFIG.CLKOUT4_DRIVES {Buffer} \
     CONFIG.CLKOUT5_DRIVES {Buffer} \
@@ -1047,16 +1045,16 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
     CONFIG.JITTER_OPTIONS {PS} \
     CONFIG.JITTER_SEL {Min_O_Jitter} \
     CONFIG.MMCM_BANDWIDTH {HIGH} \
-    CONFIG.MMCM_CLKFBOUT_MULT_F {3.000} \
+    CONFIG.MMCM_CLKFBOUT_MULT_F {3.125} \
     CONFIG.MMCM_CLKIN1_PERIOD {2.000} \
     CONFIG.MMCM_CLKIN2_PERIOD {10.0} \
-    CONFIG.MMCM_CLKOUT0_DIVIDE_F {3.000} \
-    CONFIG.MMCM_CLKOUT1_DIVIDE {6} \
+    CONFIG.MMCM_CLKOUT0_DIVIDE_F {3.125} \
+    CONFIG.MMCM_CLKOUT1_DIVIDE {1} \
     CONFIG.MMCM_COMPENSATION {AUTO} \
     CONFIG.MMCM_DIVCLK_DIVIDE {1} \
     CONFIG.MMCM_REF_JITTER1 {0.000} \
     CONFIG.MMCM_REF_JITTER2 {0.010} \
-    CONFIG.NUM_OUT_CLKS {2} \
+    CONFIG.NUM_OUT_CLKS {1} \
     CONFIG.OPTIMIZE_CLOCKING_STRUCTURE_EN {false} \
     CONFIG.PRIMITIVE {MMCM} \
     CONFIG.PRIM_IN_FREQ {500.0} \
@@ -1066,11 +1064,8 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
     CONFIG.USE_LOCKED {true} \
     CONFIG.USE_PHASE_ALIGNMENT {true} \
     CONFIG.USE_RESET {true} \
-  ] $MTSclkwiz
+  ] $clkwiz
 
-
-  # Create instance: proc_sys_reset_250M, and set properties
-  set proc_sys_reset_250M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_250M ]
 
   # Create instance: proc_sys_reset_500M, and set properties
   set proc_sys_reset_500M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_500M ]
@@ -1098,41 +1093,34 @@ proc create_hier_cell_clocktree { parentCell nameHier } {
   # Create interface connections
   connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins ibufds_pl_clk/CLK_IN_D] [get_bd_intf_pins pl_clk]
   connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins ibufds_pl_sysref/CLK_IN_D] [get_bd_intf_pins pl_sysref]
-  connect_bd_intf_net -intf_net control_interconnect_M07_AXI [get_bd_intf_pins S_AXI_LITE] [get_bd_intf_pins MTSclkwiz/s_axi_lite]
+  connect_bd_intf_net -intf_net control_interconnect_M07_AXI [get_bd_intf_pins S_AXI_LITE] [get_bd_intf_pins clkwiz/s_axi_lite]
 
   # Create port connections
-  connect_bd_net -net MTSclkwiz_interrupt  [get_bd_pins MTSclkwiz/interrupt] \
+  connect_bd_net -net MTSclkwiz_interrupt  [get_bd_pins clkwiz/interrupt] \
   [get_bd_pins irq]
-  connect_bd_net -net RFegressReset_peripheral_aresetn  [get_bd_pins proc_sys_reset_250M/peripheral_aresetn] \
-  [get_bd_pins aresetn_250M]
   connect_bd_net -net RFingressReset_peripheral_aresetn  [get_bd_pins proc_sys_reset_500M/peripheral_aresetn] \
-  [get_bd_pins aresetn_500M]
-  connect_bd_net -net clk_wiz_0_clk_out1  [get_bd_pins MTSclkwiz/clk_out1] \
-  [get_bd_pins clk_500M] \
+  [get_bd_pins user_aresetn]
+  connect_bd_net -net clk_wiz_0_clk_out1  [get_bd_pins clkwiz/clk_out1] \
+  [get_bd_pins user_clk] \
   [get_bd_pins proc_sys_reset_500M/slowest_sync_clk] \
   [get_bd_pins synch_sysref/dest_clk]
-  connect_bd_net -net clk_wiz_0_locked  [get_bd_pins MTSclkwiz/locked] \
-  [get_bd_pins proc_sys_reset_250M/dcm_locked] \
+  connect_bd_net -net clk_wiz_0_locked  [get_bd_pins clkwiz/locked] \
   [get_bd_pins proc_sys_reset_500M/dcm_locked]
-  connect_bd_net -net clk_wiz_adc0_clk_out2  [get_bd_pins MTSclkwiz/clk_out2] \
-  [get_bd_pins clk_250M] \
-  [get_bd_pins proc_sys_reset_250M/slowest_sync_clk]
   connect_bd_net -net ibufds_pl_sysref_IBUF_OUT  [get_bd_pins ibufds_pl_sysref/IBUF_OUT] \
   [get_bd_pins synch_sysref/src_in]
   connect_bd_net -net pl_clk_ibufds_IBUF_OUT  [get_bd_pins ibufds_pl_clk/IBUF_OUT] \
   [get_bd_pins bufg_pl_clk/BUFG_I]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins s_axi_resetn] \
-  [get_bd_pins MTSclkwiz/s_axi_aresetn] \
-  [get_bd_pins proc_sys_reset_500M/ext_reset_in] \
-  [get_bd_pins proc_sys_reset_250M/ext_reset_in]
+  [get_bd_pins clkwiz/s_axi_aresetn] \
+  [get_bd_pins proc_sys_reset_500M/ext_reset_in]
   connect_bd_net -net synch_sysref_dest_out  [get_bd_pins synch_sysref/dest_out] \
   [get_bd_pins user_sysref]
   connect_bd_net -net util_ds_buf_0_BUFG_O  [get_bd_pins bufg_pl_clk/BUFG_O] \
-  [get_bd_pins MTSclkwiz/clk_in1] \
+  [get_bd_pins clkwiz/clk_in1] \
   [get_bd_pins synch_sysref/src_clk]
   connect_bd_net -net zynq_ultra_ps_e_0_pl_clk0  [get_bd_pins s_axi_aclk] \
-  [get_bd_pins MTSclkwiz/s_axi_aclk] \
-  [get_bd_pins MTSclkwiz/ref_clk]
+  [get_bd_pins clkwiz/s_axi_aclk] \
+  [get_bd_pins clkwiz/ref_clk]
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -1217,8 +1205,8 @@ proc create_root_design { parentCell } {
 
   # Create ports
 
-  # Create instance: clocktree
-  create_hier_cell_clocktree [current_bd_instance .] clocktree
+  # Create instance: sysref_capture
+  create_hier_cell_sysref_capture [current_bd_instance .] sysref_capture
 
   # Create instance: signal_player
   create_hier_cell_signal_player [current_bd_instance .] signal_player
@@ -2432,6 +2420,63 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   ] $rfdc
 
 
+  # Create instance: proc_sys_reset_250M, and set properties
+  set proc_sys_reset_250M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_250M ]
+
+  # Create instance: clkwiz_250, and set properties
+  set clkwiz_250 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clkwiz_250 ]
+  set_property -dict [list \
+    CONFIG.AUTO_PRIMITIVE {MMCM} \
+    CONFIG.CLKIN1_JITTER_PS {0.10} \
+    CONFIG.CLKIN1_UI_JITTER {0.10} \
+    CONFIG.CLKIN2_JITTER_PS {100.000} \
+    CONFIG.CLKIN2_UI_JITTER {100.000} \
+    CONFIG.CLKOUT1_DRIVES {Buffer} \
+    CONFIG.CLKOUT1_JITTER {76.772} \
+    CONFIG.CLKOUT1_MATCHED_ROUTING {true} \
+    CONFIG.CLKOUT1_PHASE_ERROR {70.309} \
+    CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {250} \
+    CONFIG.CLKOUT2_DRIVES {Buffer} \
+    CONFIG.CLKOUT2_JITTER {78.335} \
+    CONFIG.CLKOUT2_MATCHED_ROUTING {false} \
+    CONFIG.CLKOUT2_PHASE_ERROR {66.020} \
+    CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {250.0} \
+    CONFIG.CLKOUT2_USED {false} \
+    CONFIG.CLKOUT3_DRIVES {Buffer} \
+    CONFIG.CLKOUT4_DRIVES {Buffer} \
+    CONFIG.CLKOUT5_DRIVES {Buffer} \
+    CONFIG.CLKOUT6_DRIVES {Buffer} \
+    CONFIG.CLKOUT7_DRIVES {Buffer} \
+    CONFIG.CLK_OUT1_PORT {clk_250} \
+    CONFIG.ENABLE_CLOCK_MONITOR {false} \
+    CONFIG.FEEDBACK_SOURCE {FDBK_AUTO} \
+    CONFIG.JITTER_OPTIONS {PS} \
+    CONFIG.JITTER_SEL {Min_O_Jitter} \
+    CONFIG.MMCM_BANDWIDTH {HIGH} \
+    CONFIG.MMCM_CLKFBOUT_MULT_F {6.375} \
+    CONFIG.MMCM_CLKIN1_PERIOD {2.000} \
+    CONFIG.MMCM_CLKIN2_PERIOD {10.0} \
+    CONFIG.MMCM_CLKOUT0_DIVIDE_F {6.375} \
+    CONFIG.MMCM_CLKOUT1_DIVIDE {1} \
+    CONFIG.MMCM_COMPENSATION {AUTO} \
+    CONFIG.MMCM_DIVCLK_DIVIDE {2} \
+    CONFIG.MMCM_REF_JITTER1 {0.000} \
+    CONFIG.MMCM_REF_JITTER2 {0.010} \
+    CONFIG.NUM_OUT_CLKS {1} \
+    CONFIG.OPTIMIZE_CLOCKING_STRUCTURE_EN {false} \
+    CONFIG.PRIMITIVE {MMCM} \
+    CONFIG.PRIM_IN_FREQ {500.0} \
+    CONFIG.PRIM_SOURCE {Global_buffer} \
+    CONFIG.RESET_PORT {resetn} \
+    CONFIG.RESET_TYPE {ACTIVE_LOW} \
+    CONFIG.SECONDARY_SOURCE {Single_ended_clock_capable_pin} \
+    CONFIG.USE_DYN_RECONFIG {false} \
+    CONFIG.USE_LOCKED {true} \
+    CONFIG.USE_PHASE_ALIGNMENT {true} \
+    CONFIG.USE_RESET {true} \
+  ] $clkwiz_250
+
+
   # Create interface connections
   connect_bd_intf_net -intf_net AXIS_ADC_A_1 [get_bd_intf_pins signal_capture/AXIS_ADC_A] [get_bd_intf_pins axis_combiner/m22_axis]
   connect_bd_intf_net -intf_net AXIS_ADC_B_1 [get_bd_intf_pins signal_capture/AXIS_ADC_B] [get_bd_intf_pins axis_combiner/m20_axis]
@@ -2439,8 +2484,8 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_intf_net -intf_net AXIS_ADC_D_1 [get_bd_intf_pins signal_capture/AXIS_ADC_D] [get_bd_intf_pins axis_combiner/m00_axis]
   connect_bd_intf_net -intf_net adc2_clk_1 [get_bd_intf_ports adc2_clk] [get_bd_intf_pins rfdc/adc2_clk]
   connect_bd_intf_net -intf_net dac2_clk_1 [get_bd_intf_ports dac2_clk] [get_bd_intf_pins rfdc/dac2_clk]
-  connect_bd_intf_net -intf_net pl_clk_1 [get_bd_intf_ports pl_clk] [get_bd_intf_pins clocktree/pl_clk]
-  connect_bd_intf_net -intf_net pl_sysref_1 [get_bd_intf_ports pl_sysref] [get_bd_intf_pins clocktree/pl_sysref]
+  connect_bd_intf_net -intf_net pl_clk_1 [get_bd_intf_ports pl_clk] [get_bd_intf_pins sysref_capture/pl_clk]
+  connect_bd_intf_net -intf_net pl_sysref_1 [get_bd_intf_ports pl_sysref] [get_bd_intf_pins sysref_capture/pl_sysref]
   connect_bd_intf_net -intf_net rfdc1_m00_axis [get_bd_intf_pins axis_combiner/s00_axis] [get_bd_intf_pins rfdc/m00_axis]
   connect_bd_intf_net -intf_net rfdc1_m01_axis [get_bd_intf_pins axis_combiner/s01_axis] [get_bd_intf_pins rfdc/m01_axis]
   connect_bd_intf_net -intf_net rfdc1_m02_axis [get_bd_intf_pins axis_combiner/s02_axis] [get_bd_intf_pins rfdc/m02_axis]
@@ -2457,7 +2502,7 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_intf_net -intf_net signal_player_AXIS_DAC_B [get_bd_intf_pins signal_player/AXIS_DAC_B] [get_bd_intf_pins rfdc/s00_axis]
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI1 [get_bd_intf_pins smartconnect_hpm0/M01_AXI] [get_bd_intf_pins axi_intc/s_axi]
   connect_bd_intf_net -intf_net smartconnect_hpm0_M00_AXI [get_bd_intf_pins smartconnect_hpm0/M00_AXI] [get_bd_intf_pins rfdc/s_axi]
-  connect_bd_intf_net -intf_net smartconnect_hpm0_M02_AXI [get_bd_intf_pins smartconnect_hpm0/M02_AXI] [get_bd_intf_pins clocktree/S_AXI_LITE]
+  connect_bd_intf_net -intf_net smartconnect_hpm0_M02_AXI [get_bd_intf_pins smartconnect_hpm0/M02_AXI] [get_bd_intf_pins sysref_capture/S_AXI_LITE]
   connect_bd_intf_net -intf_net smartconnect_hpm1_M00_AXI [get_bd_intf_pins smartconnect_hpm1/M00_AXI] [get_bd_intf_pins signal_capture/S_AXI]
   connect_bd_intf_net -intf_net smartconnect_hpm1_M01_AXI [get_bd_intf_pins smartconnect_hpm1/M01_AXI] [get_bd_intf_pins signal_player/S_AXI]
   connect_bd_intf_net -intf_net sysref_in_1 [get_bd_intf_ports sysref_in] [get_bd_intf_pins rfdc/sysref_in]
@@ -2471,11 +2516,13 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_intf_net -intf_net zynq_ultra_ps_e_0_M_AXI_HPM1_FPD [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM1_FPD] [get_bd_intf_pins smartconnect_hpm1/S00_AXI]
 
   # Create port connections
-  connect_bd_net -net RFegressReset_peripheral_aresetn  [get_bd_pins clocktree/aresetn_250M] \
+  connect_bd_net -net MTSclkwiz1_locked  [get_bd_pins clkwiz_250/locked] \
+  [get_bd_pins proc_sys_reset_250M/dcm_locked]
+  connect_bd_net -net RFegressReset_peripheral_aresetn  [get_bd_pins proc_sys_reset_250M/peripheral_aresetn] \
   [get_bd_pins smartconnect_hpm1/aresetn] \
   [get_bd_pins signal_capture/m_axis_aresetn] \
   [get_bd_pins signal_player/s_axis_aresetn]
-  connect_bd_net -net RFingressReset_peripheral_aresetn  [get_bd_pins clocktree/aresetn_500M] \
+  connect_bd_net -net RFingressReset_peripheral_aresetn  [get_bd_pins sysref_capture/user_aresetn] \
   [get_bd_pins signal_capture/s_axis_aresetn] \
   [get_bd_pins signal_player/m_axis_aresetn] \
   [get_bd_pins axis_combiner/s0_axis_aresetn] \
@@ -2487,10 +2534,11 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   [get_bd_pins rfdc/m3_axis_aresetn] \
   [get_bd_pins rfdc/m2_axis_aresetn] \
   [get_bd_pins rfdc/m1_axis_aresetn] \
-  [get_bd_pins rfdc/m0_axis_aresetn]
+  [get_bd_pins rfdc/m0_axis_aresetn] \
+  [get_bd_pins clkwiz_250/resetn]
   connect_bd_net -net axi_intc_0_irq  [get_bd_pins axi_intc/irq] \
   [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
-  connect_bd_net -net clk_wiz_0_clk_out1  [get_bd_pins clocktree/clk_500M] \
+  connect_bd_net -net clk_wiz_0_clk_out1  [get_bd_pins sysref_capture/user_clk] \
   [get_bd_pins signal_capture/s_axis_aclk] \
   [get_bd_pins signal_player/m_axis_aclk] \
   [get_bd_pins axis_combiner/s0_axis_aclk] \
@@ -2502,28 +2550,31 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   [get_bd_pins rfdc/m3_axis_aclk] \
   [get_bd_pins rfdc/m2_axis_aclk] \
   [get_bd_pins rfdc/m1_axis_aclk] \
-  [get_bd_pins rfdc/m0_axis_aclk]
-  connect_bd_net -net clk_wiz_adc0_clk_out2  [get_bd_pins clocktree/clk_250M] \
+  [get_bd_pins rfdc/m0_axis_aclk] \
+  [get_bd_pins clkwiz_250/clk_in1]
+  connect_bd_net -net clk_wiz_adc0_clk_out2  [get_bd_pins clkwiz_250/clk_250] \
   [get_bd_pins zynq_ultra_ps_e_0/maxihpm1_fpd_aclk] \
   [get_bd_pins smartconnect_hpm1/aclk] \
   [get_bd_pins signal_capture/m_axis_aclk] \
-  [get_bd_pins signal_player/s_axis_aclk]
-  connect_bd_net -net clocktreeMTS_user_sysref  [get_bd_pins clocktree/user_sysref] \
+  [get_bd_pins signal_player/s_axis_aclk] \
+  [get_bd_pins proc_sys_reset_250M/slowest_sync_clk]
+  connect_bd_net -net clocktreeMTS_user_sysref  [get_bd_pins sysref_capture/user_sysref] \
   [get_bd_pins rfdc/user_sysref_dac] \
   [get_bd_pins rfdc/user_sysref_adc]
-  connect_bd_net -net clocktree_irq  [get_bd_pins clocktree/irq] \
+  connect_bd_net -net clocktree_irq  [get_bd_pins sysref_capture/irq] \
   [get_bd_pins irq_concat/In0]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins proc_sys_reset/peripheral_aresetn] \
-  [get_bd_pins clocktree/s_axi_resetn] \
+  [get_bd_pins sysref_capture/s_axi_resetn] \
   [get_bd_pins smartconnect_hpm0/aresetn] \
   [get_bd_pins axi_intc/s_axi_aresetn] \
-  [get_bd_pins rfdc/s_axi_aresetn]
+  [get_bd_pins rfdc/s_axi_aresetn] \
+  [get_bd_pins proc_sys_reset_250M/ext_reset_in]
   connect_bd_net -net rfdc1_irq  [get_bd_pins rfdc/irq] \
   [get_bd_pins irq_concat/In1]
   connect_bd_net -net xlconcat_0_dout  [get_bd_pins irq_concat/dout] \
   [get_bd_pins axi_intc/intr]
   connect_bd_net -net zynq_ultra_ps_e_0_pl_clk0  [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] \
-  [get_bd_pins clocktree/s_axi_aclk] \
+  [get_bd_pins sysref_capture/s_axi_aclk] \
   [get_bd_pins proc_sys_reset/slowest_sync_clk] \
   [get_bd_pins smartconnect_hpm0/aclk] \
   [get_bd_pins axi_intc/s_axi_aclk] \
@@ -2533,7 +2584,7 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   [get_bd_pins proc_sys_reset/ext_reset_in]
 
   # Create address segments
-  assign_bd_address -offset 0xA0010000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs clocktree/MTSclkwiz/s_axi_lite/Reg] -force
+  assign_bd_address -offset 0xA0010000 -range 0x00010000 -with_name SEG_MTSclkwiz_Reg -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs sysref_capture/clkwiz/s_axi_lite/Reg] -force
   assign_bd_address -offset 0xA0000000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc/S_AXI/Reg] -force
   assign_bd_address -offset 0xB0000000 -range 0x00004000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/adc_a/bram_ctrl/S_AXI/Mem0] -force
   assign_bd_address -offset 0xB0004000 -range 0x00004000 -with_name SEG_bram_ctrl_Mem0_1 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/adc_b/bram_ctrl/S_AXI/Mem0] -force
@@ -2548,6 +2599,7 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   # Restore current instance
   current_bd_instance $oldCurInst
 
+  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -2559,6 +2611,4 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
 
 create_root_design ""
 
-
-common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
 
