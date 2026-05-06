@@ -1,5 +1,5 @@
 # Differential PL_SYSREF and PL_CLK assignments
-set_property PACKAGE_PIN B10 [get_ports {pl_sysref_clk_p[0]}]
+set_property PACKAGE_PIN B10 [get_ports {pl_sysref_clk_p[0}]
 set_property PACKAGE_PIN B9 [get_ports {pl_sysref_clk_n[0]}]
 set_property IOSTANDARD LVDS_25 [get_ports {pl_sysref_clk_p[0]}]
 set_property IOSTANDARD LVDS_25 [get_ports {pl_sysref_clk_n[0]}]
@@ -27,7 +27,7 @@ create_clock -period 2.000 -name pl_clk [get_ports {pl_clk_clk_p[0]}]
 set_input_delay -clock [get_clocks pl_clk] -min -add_delay 2.000 [get_ports {pl_sysref_clk_p[0]}]
 set_input_delay -clock [get_clocks pl_clk] -max -add_delay 2.031 [get_ports {pl_sysref_clk_p[0]}]
 
-set_property CLOCK_DEDICATED_ROUTE ANY_CMT_COLUMN [get_nets mts_i/clocktree/bufg_pl_clk/U0/BUFG_O[0]]
+set_property CLOCK_DEDICATED_ROUTE ANY_CMT_COLUMN [get_nets mts_i/sysref_capture/bufg_pl_clk/U0/BUFG_O[0]]
 
 # Bitstream generation
 set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
