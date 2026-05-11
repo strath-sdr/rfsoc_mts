@@ -22,9 +22,9 @@ class package_installer():
             if key != 'self':
                 setattr(self, key, args[key])
         self.check_board()
-        self.copy_projects()
         self.copy_notebooks()
         self.copy_modules()
+        self.copy_projects()
         self.run_setup()
 
     def check_board(self):
