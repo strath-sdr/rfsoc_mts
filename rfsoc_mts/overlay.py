@@ -111,31 +111,56 @@ class Overlay(Overlay):
                 }
                 block.UpdateEvent(xrfdc.EVENT_MIXER)
                 tile.SetupFIFO(True)
-                
-    def plot_adc(self, sample_matrix, window, title="Signal Comparison"):
         
+    def plot_adc(self, sample_matrix, window, title="Signal Comparison"):
+
         adc_names = [name.capitalize() for name in self.signal_capture.bram_hierarchies]
-                 
-        signals = sample_matrix[:, 0:window]          
+
+        signals = sample_matrix[:, 0:window]
         x = np.arange(window)
 
         fig, axes = plt.subplots(2, 1, sharex=True, figsize=(12, 6))
 
-        styles = ['m-^', '-o', 'r-x', 'g-s', 'c-d', 'k-*']
+        colours = [
+            'tab:blue',
+            'tab:orange',
+            'tab:green',
+            'tab:red',
+            'tab:purple',
+            'tab:pink',
+            'tab:olive',
+            'tab:cyan'
+        ]
+        
+        markers = ['o', 'x', 's', '^', 'd', '*', 'v', 'P']
 
         # -- Real part --
         for i, sig in enumerate(signals):
-            style = styles[i % len(styles)]
-            axes[0].plot(x, sig.real, style, markersize=3, label=adc_names[i])
+            axes[0].plot(
+                x,
+                sig.real,
+                color=colours[i % len(colours)],
+                linestyle='-',
+                marker=markers[i % len(markers)],
+                markersize=4,
+                label=adc_names[i]
+            )
 
         axes[0].set_title(f"Real ({title})")
         axes[0].set_ylabel("Amplitude")
         axes[0].legend()
 
-        # -- Imag part --
+        # -- Imaginary part --
         for i, sig in enumerate(signals):
-            style = styles[i % len(styles)]
-            axes[1].plot(x, sig.imag, style, markersize=3, label=adc_names[i])
+            axes[1].plot(
+                x,
+                sig.imag,
+                color=colours[i % len(colours)],
+                linestyle='-',
+                marker=markers[i % len(markers)],
+                markersize=4,
+                label=adc_names[i]
+            )
 
         axes[1].set_title(f"Imag ({title})")
         axes[1].set_xlabel("Sample Index")
