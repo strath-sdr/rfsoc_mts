@@ -4,8 +4,8 @@ __support__ = "https://github.com/strath-sdr/rfsoc-mts"
 
 import pynq
 from pynq import Overlay, PL
-from modules.hierarchies import SignalPlayer, SignalCapture
-from modules.mts import MultiTileSynchronisation
+from .hierarchies import SignalPlayer, SignalCapture
+from .mts import MultiTileSynchronisation
 import xrfclk
 import xrfdc
 import numpy as np
@@ -42,7 +42,12 @@ class Overlay(Overlay):
         # -- Generate default bitfile name --
         if bitfile_name is None:
             this_dir = os.path.dirname(__file__)
-            bitfile_name = os.path.join(this_dir, 'mts.xsa')
+            bitfile_name = os.path.join(this_dir, 'rfsoc_mts', 'bitstream', 'mts.xsa')
+
+            if not os.path.isdir(bitfile_name):
+                raise ValueError("Please provide a valid .xsa file for the hardware overlay.")
+            
+            
 
         # -- Load bitstream/xsa --
         PL.reset()
