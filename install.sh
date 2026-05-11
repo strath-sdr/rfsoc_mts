@@ -17,7 +17,7 @@ pushd sdbuild/packages/xrfdc
 popd
 
 # Move required LMK/LMX driver files into xrfclk and reinstall the package
-sudo cp -r ../rfsoc_mts/rfsoc_mts/xrfclk/* ./sdbuild/packages/xrfclk/package/xrfclk
+sudo cp -r ../boards/$BOARD/rfsoc_mts/xrfclk* ./sdbuild/packages/xrfclk/package/xrfclk
 
 pushd sdbuild/packages/xrfclk
 . pre.sh
