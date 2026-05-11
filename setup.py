@@ -24,6 +24,7 @@ class package_installer():
         self.check_board()
         self.copy_projects()
         self.copy_notebooks()
+        self.copy_modules()
         self.run_setup()
 
     def check_board(self):
@@ -63,6 +64,16 @@ class package_installer():
         src_nb_dir = os.path.join('boards', self.board, self.name, 'notebooks')
         dst_nb_dir = os.path.join(board_project_dir)
         copy_tree(src_nb_dir, dst_nb_dir)
+
+    def copy_modules(self):
+        """Copy all rfsoc_mts package drivers into <notebook-directory>/module for ease of access"""
+        src = os.path.join('rfsoc_mts')
+        dst = os.path.join(board_project_dir, 'modules')
+        copy_tree(src, dst)
+        """Copy hardware .xsa bitfile into <notebook-directory>/modules/rfsoc_mts/bitstream"""
+        src = os.path.join('boards', self.board, self.name, 'bitstream')
+        dst = os.path.join(board_project_dir, 'modules', self.name, 'bitstream')
+        copy_tree(src, dst)
     
     def run_setup(self):
         setup(name=self.name,
