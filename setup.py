@@ -67,13 +67,13 @@ class package_installer():
 
     def copy_modules(self):
         """Copy all rfsoc_mts package drivers into <notebook-directory>/module for ease of access"""
-        src = os.path.join('rfsoc_mts')
-        dst = os.path.join(board_project_dir, 'modules')
-        copy_tree(src, dst)
+        src_modules = os.path.join('rfsoc_mts')
+        dst_modules = os.path.join(board_project_dir, 'modules')
+        copy_tree(src_modules, dst_modules)
         """Copy hardware .xsa bitfile into <notebook-directory>/modules/rfsoc_mts/bitstream"""
-        src = os.path.join('boards', self.board, self.name, 'bitstream')
-        dst = os.path.join(board_project_dir, 'modules', self.name, 'bitstream')
-        copy_tree(src, dst)
+        src_bitstream = os.path.join('boards', self.board, self.name, 'bitstream')
+        dst_bitstream = os.path.join(dst_modules, self.name, 'bitstream')
+        copy_tree(src_bitstream, dst_bitstream)
     
     def run_setup(self):
         setup(name=self.name,
@@ -89,7 +89,7 @@ class package_installer():
 
 package_installer(name = "rfsoc_mts",
                   version = "0.1.0",
-                  description  = "RFSoC package to aid in the synchronisation of RFDC tiles using MTS framework.",
+                  description  = "RFSoC package to aid in digital feature synchronisation of RFDC tiles using MTS framework.",
                   author = "Ryan Provan",
                   email = "ryan.provan@strath.ac.uk, rjprovan2001@gmail.com",
                   license = "None",
