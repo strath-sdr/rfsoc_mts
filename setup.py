@@ -22,10 +22,10 @@ class package_installer():
             if key != 'self':
                 setattr(self, key, args[key])
         self.check_board()
-        self.copy_notebooks()
-        self.copy_modules()
         self.copy_projects()
+        self.copy_notebooks()
         self.run_setup()
+        self.copy_modules()
 
     def check_board(self):
         """Check (1) the board is supported by the repository, and (2) the Jupyter Notebook directory exists"""
