@@ -1,6 +1,7 @@
 import os
 from distutils.dir_util import copy_tree
 from setuptools import find_packages, setup
+import shutil
 
 board_notebooks_dir = os.environ['PYNQ_JUPYTER_NOTEBOOKS']
 board_project_dir = os.path.join(board_notebooks_dir, 'rfsoc-mts')
@@ -23,7 +24,6 @@ class package_installer():
                 setattr(self, key, args[key])
         self.check_board()
         self.copy_projects()
-        self.copy_notebooks()
         self.run_setup()
         self.copy_modules()
 
@@ -36,21 +36,15 @@ class package_installer():
                 "Directory {} does not exist.".format(board_notebooks_dir))
         
     def copy_projects(self):
-        """
-        Copy board specific files from
-            boards/<board>/<project>/<subdir>/
-        to
-            <cwd>/<self.name>/<project>/<subdir>/
-        notebooks, bitstreams, clks, etc.
-        """
         cwd = os.getcwd()
-        for prj in next(os.walk(os.path.join(cwd, 'boards', self.board)))[1]:
-            temp_prj = os.path.join(cwd, 'boards', self.board, prj)
-            for directory in next(os.walk(temp_prj))[1]:
-                src = os.path.join(temp_prj, directory)
-                dst = os.path.join(cwd, self.name, prj, directory)
-                copy_tree(src, dst)
 
+        for directory in ['notebooks', 'bitstream']:
+            src = os.path.join(cwd, 'boards', self.board, self.name, directory)
+            dst = os.path.join(cwd, self.name, directory)
+
+            if os.path.isdir(src):
+                copy_tree(src, dst)
+                
     def generate_pkg_dirs(self):
         """All files copied over from subdirs via copy_projects are acquired and included in package data"""
         data_files = []
@@ -59,20 +53,21 @@ class package_installer():
                 data_files.append("".join([directory[0],"/",file]))
         return data_files
     
-    def copy_notebooks(self):
-        """Copy notebooks into the Jupyter directory"""
-        src_nb_dir = os.path.join('boards', self.board, self.name, 'notebooks')
-        dst_nb_dir = os.path.join(board_project_dir)
-        copy_tree(src_nb_dir, dst_nb_dir)
-
     def copy_modules(self):
-        """Copy all rfsoc_mts package drivers into <notebook-directory>/module for ease of access"""
-        src_modules = os.path.join('rfsoc_mts')
-        dst_modules = os.path.join(board_project_dir, 'modules')
-        copy_tree(src_modules, dst_modules)
-        """Copy hardware .xsa bitfile into <notebook-directory>/modules/rfsoc_mts/bitstream"""
+        dst_pkg = os.path.join(board_project_dir, 'modules', self.name)
+        os.makedirs(dst_pkg, exist_ok=True)
+
+        # Copy only Python files from ./rfsoc_mts
+        for fname in os.listdir(self.name):
+            src = os.path.join(self.name, fname)
+            dst = os.path.join(dst_pkg, fname)
+
+            if os.path.isfile(src) and fname.endswith('.py'):
+                shutil.copy2(src, dst)
+
+        # Copy only board bitstream into modules/rfsoc_mts/bitstream
         src_bitstream = os.path.join('boards', self.board, self.name, 'bitstream')
-        dst_bitstream = os.path.join(dst_modules, self.name, 'bitstream')
+        dst_bitstream = os.path.join(dst_pkg, 'bitstream')
         copy_tree(src_bitstream, dst_bitstream)
     
     def run_setup(self):
