@@ -9,7 +9,9 @@ git clone --branch image_v3.1.1 https://github.com/Xilinx/PYNQ.git
 cd PYNQ
 
 # Apply changes to xrfdc and reinstall the package
-git apply ../boards/patches/xrfdc_mts.patch
+echo "Applying xrfdc MTS patch & reinstalling the package"
+#git apply ../boards/patches/xrfdc_mts.patch
+git apply ../boards/patches/xrfdc_mts2.patch
 
 pushd sdbuild/packages/xrfdc
 . pre.sh
@@ -17,6 +19,7 @@ pushd sdbuild/packages/xrfdc
 popd
 
 # Move required LMK/LMX driver files into xrfclk and reinstall the package
+echo "Grabbing LMK/LMX files and installing them into xrfclk"
 sudo cp -r ../boards/$BOARD/rfsoc_mts/xrfclk* ./sdbuild/packages/xrfclk/package/xrfclk
 
 pushd sdbuild/packages/xrfclk
@@ -25,7 +28,9 @@ pushd sdbuild/packages/xrfclk
 popd
 
 # Install rfsoc_mts package and notebook
+echo "Installing rfsoc_mts package"
 cd ..
 python3 -m pip install . --no-build-isolation
-#pynq-get-notebooks rfsoc_mts -p $PYNQ_JUPYTER_NOTEBOOKS
-echo "$BOARD Ready..."
+
+
+echo "The MTS demonstration is now installed!"
