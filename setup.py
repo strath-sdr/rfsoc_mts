@@ -74,7 +74,7 @@ class package_installer():
 
         # Copy only bitstream into modules/rfsoc_mts/bitstream
         src_bitstream = os.path.join('boards', self.board, self.name, 'bitstream')
-        dst_bitstream = os.path.join(dst_modules, self.name, 'bitstream')
+        dst_bitstream = os.path.join(dst_modules, 'bitstream')
         copy_tree(src_bitstream, dst_bitstream)
     
     def run_setup(self):

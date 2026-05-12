@@ -42,7 +42,7 @@ class Overlay(Overlay):
         # -- Generate default bitfile name --
         if bitfile_name is None:
             this_dir = os.path.dirname(__file__)
-            bitfile_name = os.path.join(this_dir, 'rfsoc_mts', 'bitstream', 'mts.xsa')
+            bitfile_name = os.path.join(this_dir, 'bitstream', 'mts.xsa')
 
             if not os.path.isfile(bitfile_name):
                 raise ValueError("Please provide a valid .xsa file for the hardware overlay.")
