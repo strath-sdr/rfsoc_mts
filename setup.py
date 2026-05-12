@@ -24,6 +24,7 @@ class package_installer():
                 setattr(self, key, args[key])
         self.check_board()
         self.copy_projects()
+        self.copy_notebooks()
         self.run_setup()
         self.copy_modules()
 
@@ -44,6 +45,12 @@ class package_installer():
 
             if os.path.isdir(src):
                 copy_tree(src, dst)
+
+    def copy_notebooks(self):
+        """Copy notebooks into the Jupyter directory"""
+        src_nb_dir = os.path.join('boards', self.board, self.name, 'notebooks')
+        dst_nb_dir = os.path.join(board_project_dir)
+        copy_tree(src_nb_dir, dst_nb_dir)
                 
     def generate_pkg_dirs(self):
         """All files copied over from subdirs via copy_projects are acquired and included in package data"""
@@ -54,20 +61,20 @@ class package_installer():
         return data_files
     
     def copy_modules(self):
-        dst_pkg = os.path.join(board_project_dir, 'modules', self.name)
-        os.makedirs(dst_pkg, exist_ok=True)
+        dst_modules = os.path.join(board_project_dir, 'modules')
+        os.makedirs(dst_modules, exist_ok=True)
 
-        # Copy only Python files from ./rfsoc_mts
+        # Copy only Python files from ./rfsoc_mts directly into modules/
         for fname in os.listdir(self.name):
             src = os.path.join(self.name, fname)
-            dst = os.path.join(dst_pkg, fname)
+            dst = os.path.join(dst_modules, fname)
 
             if os.path.isfile(src) and fname.endswith('.py'):
                 shutil.copy2(src, dst)
 
-        # Copy only board bitstream into modules/rfsoc_mts/bitstream
+        # Copy only bitstream into modules/rfsoc_mts/bitstream
         src_bitstream = os.path.join('boards', self.board, self.name, 'bitstream')
-        dst_bitstream = os.path.join(dst_pkg, 'bitstream')
+        dst_bitstream = os.path.join(dst_modules, self.name, 'bitstream')
         copy_tree(src_bitstream, dst_bitstream)
     
     def run_setup(self):

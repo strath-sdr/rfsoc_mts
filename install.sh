@@ -27,5 +27,5 @@ popd
 # Install rfsoc_mts package and notebook
 cd ..
 python3 -m pip install . --no-build-isolation
-pynq-get-notebooks rfsoc_mts -p $PYNQ_JUPYTER_NOTEBOOKS
+#pynq-get-notebooks rfsoc_mts -p $PYNQ_JUPYTER_NOTEBOOKS
 echo "$BOARD Ready..."
