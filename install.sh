@@ -12,6 +12,13 @@ pushd sdbuild/packages/xrfdc
 . qemu.sh
 popd
 
+#pushd sdbuild/packages/xrfdc
+#rm -rf /root/xrfdc_build
+#rm -rf package/embeddedsw/ThirdParty/sw_services/libmetal/src/libmetal/build-libmetal
+#. pre.sh
+#. qemu.sh
+#popd
+
 # Move required LMK/LMX driver files into xrfclk and reinstall the package
 echo "Copying LMK/LMX files into xrfclk and reinstalling the package"
 sudo cp -r ../boards/$BOARD/rfsoc_mts/xrfclk* ./sdbuild/packages/xrfclk/package/xrfclk
@@ -25,6 +32,5 @@ popd
 echo "Installing rfsoc_mts package"
 cd ..
 python3 -m pip install . --no-build-isolation
-
 
 echo "The MTS demonstration is now installed!"
