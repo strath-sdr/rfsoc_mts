@@ -1,10 +1,4 @@
-# -------------------------------------------------------------------------------------------------
-# Copyright (C) 2023 Advanced Micro Devices, Inc
-# SPDX-License-Identifier: MIT
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- --
-
-# Build MTS necessary patch to xrfdc package
-echo "Cloning the PYNQ repository"
+# Clone the PYNQ 3.1.1 image
 git clone --branch image_v3.1.1 https://github.com/Xilinx/PYNQ.git
 cd PYNQ
 
@@ -19,7 +13,7 @@ pushd sdbuild/packages/xrfdc
 popd
 
 # Move required LMK/LMX driver files into xrfclk and reinstall the package
-echo "Grabbing LMK/LMX files and installing them into xrfclk"
+echo "Copying LMK/LMX files into xrfclk and reinstalling the package"
 sudo cp -r ../boards/$BOARD/rfsoc_mts/xrfclk* ./sdbuild/packages/xrfclk/package/xrfclk
 
 pushd sdbuild/packages/xrfclk

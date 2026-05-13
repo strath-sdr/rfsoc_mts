@@ -7,7 +7,7 @@ index 7ed01ae6..280b6db7 100644
  ESW_LIBS := rfdc scugic
  LIBRARY := lib$(PACKAGE).so
 -ESW_VERSION  := xilinx-v2020.2
-+ESW_VERSION  := xilinx-v2024.1
++ESW_VERSION  := xilinx_v2024.1
  LIB_METAL_DIR := $(EMBEDDEDSW_DIR)/ThirdParty/sw_services/libmetal/src/libmetal
  LIB_METAL_INC := $(LIB_METAL_DIR)/build-libmetal/lib/include
  ESW_SRC := $(filter-out %_g.c, $(foreach lib, $(ESW_LIBS), $(wildcard $(EMBEDDEDSW_DIR)/XilinxProcessorIPLib/drivers/$(lib)/src/*.c)))
