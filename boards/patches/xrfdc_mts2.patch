@@ -692,7 +692,7 @@ index edddc3e2..82ad8316 100644
 +    def mts_sysref_enable(self, SysRefEnable=True):
 +        en = 1 if SysRefEnable else 0
 +        _safe_wrapper("XRFdc_MTS_Sysref_Config", self._instance, self.dac_mts_config, self.adc_mts_config, en)
-+        
++
 +# Finally we can add our data-driven properties to each class in the hierarchy
 +for name, typename, readonly in _block_props:
 +    setattr(RFdcBlock, name, _create_c_property(name, typename, readonly))
