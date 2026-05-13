@@ -1,7 +1,8 @@
-diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xrfdc/package a/sdbuild/packages/xrfdc/package b/sdbuild/packages/xrfdc/package
---- a/sdbuild/packages/xrfdc/package
-+++ b/sdbuild/packages/xrfdc/package
-@@ -5,7 +5,7 @@
+diff --git a/sdbuild/packages/xrfdc/package/Makefile b/../PYNQ/sdbuild/packages/xrfdc/package/Makefile
+index 7ed01ae6..a6e30cfc 100644
+--- a/sdbuild/packages/xrfdc/package/Makefile
++++ b/../PYNQ/sdbuild/packages/xrfdc/package/Makefile
+@@ -5,7 +5,7 @@ EMBEDDEDSW_DIR ?= embeddedsw
  PACKAGE := xrfdc
  ESW_LIBS := rfdc scugic
  LIBRARY := lib$(PACKAGE).so
@@ -10,7 +11,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  LIB_METAL_DIR := $(EMBEDDEDSW_DIR)/ThirdParty/sw_services/libmetal/src/libmetal
  LIB_METAL_INC := $(LIB_METAL_DIR)/build-libmetal/lib/include
  ESW_SRC := $(filter-out %_g.c, $(foreach lib, $(ESW_LIBS), $(wildcard $(EMBEDDEDSW_DIR)/XilinxProcessorIPLib/drivers/$(lib)/src/*.c)))
-@@ -20,8 +20,9 @@
+@@ -20,8 +20,9 @@ LOCAL_SRC := $(wildcard src/*.c)
  all: $(LIBRARY)
  
  $(LIBRARY): $(EMBEDDEDSW_DIR) $(LIB_METAL_INC)
@@ -22,10 +23,11 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  
  install:
  	cp $(LIBRARY) $(PACKAGE)/
-diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xrfdc/package a/sdbuild/packages/xrfdc/package b/sdbuild/packages/xrfdc/package
---- a/sdbuild/packages/xrfdc/package
-+++ b/sdbuild/packages/xrfdc/package
-@@ -4,140 +4,35 @@
+diff --git a/sdbuild/packages/xrfdc/package/README.md b/../PYNQ/sdbuild/packages/xrfdc/package/README.md
+index 6424fd1f..cd059ca5 100644
+--- a/sdbuild/packages/xrfdc/package/README.md
++++ b/../PYNQ/sdbuild/packages/xrfdc/package/README.md
+@@ -4,140 +4,35 @@ This is a package implementing the drivers for RF data converter IP.
  
  ## Usage
  
@@ -145,6 +147,8 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
 -u32 XRFdc_GetFabClkOutDiv(XRFdc *InstancePtr, u32 Type, u32 Tile_Id,
 -								u16 *FabClkDivPtr);
 -```
+-
+-This list can also be found at the `Function Prototypes` section of 
 +The class `RFdc` is bound to the IP
 +`xilinx.com:ip:usp_rf_data_converter:2.{3,4,6}`. Once the overlay is loaded, the
 +data converter IP will be allocated the driver code implemented in this class.
@@ -155,8 +159,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
 +These should match the specification of the C API but without the `XRFdc_`
 +prefix in the case of the function name. For example, if the C function
 +prototype is `XRFdc_StartUp()`, the Python wrapper API will be `StartUp()`.
- 
--This list can also be found at the `Function Prototypes` section of 
++
 +The class `RFdc` has wrapped up many C functions. A complete list of available C
 +functions be found at the `Function Prototypes` section of
  `xrfdc/xrfdc_functions.c`.
@@ -166,25 +169,23 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
 -Other functions leave the type of block implicit. We handle this distinction
 -by bubbling up through either `_call_function` or `_call_function_implicit`
 -calls. You can check `_create_c_property()` for more information.
--
--Finally we define the object hierarchy. Each element of the object
--hierarchy has a `_call_function` method which handles adding the
--block/tile/toplevel arguments to the list of function parameters.
--
--Some functions are Gen 3 specific. These are clearly labelled in the RFDC user guide. 
--If attempting to use one of these functions on a Gen 1 board, the user will see the error:
--metal: error:     
-- Requested functionality not available for this IP 
 +The underlying C functions for generic behaviour (applies to both DAC and ADC
 +blocks) expect an argument for the type of block used. Other functions leave the
 +type of block implicit. We handle this distinction by bubbling up through either
 +`_call_function` or `_call_function_implicit` calls. You can check
 +`_create_c_property()` for more information.
-+
+ 
+-Finally we define the object hierarchy. Each element of the object
+-hierarchy has a `_call_function` method which handles adding the
+-block/tile/toplevel arguments to the list of function parameters.
 +Finally we define the object hierarchy. Each element of the object hierarchy has
 +a `_call_function` method which handles adding the block/tile/toplevel arguments
 +to the list of function parameters.
-+
+ 
+-Some functions are Gen 3 specific. These are clearly labelled in the RFDC user guide. 
+-If attempting to use one of these functions on a Gen 1 board, the user will see the error:
+-metal: error:     
+- Requested functionality not available for this IP 
 +Some functions are Gen 3 specific. These are clearly labelled in the RFDC user
 +guide. If attempting to use one of these functions on a Gen 1 board, the user
 +will see the error: metal: error: Requested functionality not available for this
@@ -192,9 +193,10 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  
  Copyright (C) 2021 Xilinx, Inc
  
-diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xrfdc/package a/sdbuild/packages/xrfdc/package b/sdbuild/packages/xrfdc/package
---- a/sdbuild/packages/xrfdc/package
-+++ b/sdbuild/packages/xrfdc/package
+diff --git a/sdbuild/packages/xrfdc/package/setup.py b/../PYNQ/sdbuild/packages/xrfdc/package/setup.py
+index 620fff69..32b941e3 100644
+--- a/sdbuild/packages/xrfdc/package/setup.py
++++ b/../PYNQ/sdbuild/packages/xrfdc/package/setup.py
 @@ -4,28 +4,24 @@
  
  from setuptools import setup
@@ -234,9 +236,10 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
 +    ],
  )
 -
-diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xrfdc/package a/sdbuild/packages/xrfdc/package b/sdbuild/packages/xrfdc/package
---- a/sdbuild/packages/xrfdc/package
-+++ b/sdbuild/packages/xrfdc/package
+diff --git a/sdbuild/packages/xrfdc/package/src/xparameters.h b/../PYNQ/sdbuild/packages/xrfdc/package/src/xparameters.h
+index ac957042..d945e481 100644
+--- a/sdbuild/packages/xrfdc/package/src/xparameters.h
++++ b/../PYNQ/sdbuild/packages/xrfdc/package/src/xparameters.h
 @@ -7,5 +7,8 @@
  #define XPAR_XSCUGIC_NUM_INSTANCES 0
  #define XPAR_CPU_ID 0
@@ -247,9 +250,586 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  /* Xilinx RFdc Device Name */
  #define XPAR_XRFDC_0_DEV_NAME "a0000000.usp_rf_data_converter"
 \ No newline at end of file
-diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xrfdc/package a/sdbuild/packages/xrfdc/package b/sdbuild/packages/xrfdc/package
---- a/sdbuild/packages/xrfdc/package
-+++ b/sdbuild/packages/xrfdc/package
+diff --git a/sdbuild/packages/xrfdc/package/xrfdc/__init__.py b/../PYNQ/sdbuild/packages/xrfdc/package/xrfdc/__init__.py
+index edddc3e2..2e05c59d 100644
+--- a/sdbuild/packages/xrfdc/package/xrfdc/__init__.py
++++ b/../PYNQ/sdbuild/packages/xrfdc/package/xrfdc/__init__.py
+@@ -1,31 +1,30 @@
+ #   Copyright (c) 2018, Xilinx, Inc.
+ #   SPDX-License-Identifier: BSD-3-Clause
+ 
++import os
++import warnings
++from time import sleep
+ 
+ import cffi
+-import os
+ import pynq
+-import warnings
+ from wurlitzer import pipes
+ 
+-
+-
+-
+ _THIS_DIR = os.path.dirname(__file__)
+ 
+-with open(os.path.join(_THIS_DIR, 'xrfdc_functions.c'), 'r') as f:
++with open(os.path.join(_THIS_DIR, "xrfdc_functions.c"), "r") as f:
+     header_text = f.read()
+ 
+ _ffi = cffi.FFI()
+ _ffi.cdef(header_text)
+ 
+-_lib = _ffi.dlopen(os.path.join(_THIS_DIR, 'libxrfdc.so'))
++_lib = _ffi.dlopen(os.path.join(_THIS_DIR, "libxrfdc.so"))
+ 
+ 
+ # Next stage is a simple wrapper function which checks the existance of the
+ # function in the library and the return code and throws an exception if either
+ # fails.
+ 
++
+ def _safe_wrapper(name, *args, **kwargs):
+     with pipes() as (c1, c2):
+         if not hasattr(_lib, name):
+@@ -46,69 +45,71 @@ def _safe_wrapper(name, *args, **kwargs):
+ # class in the hierarchy. Each element of the array is a tuple consisting of
+ # the property name, the type of the property, whether or not it is
+ # read-only, whether or not it is write-only, whether or not it is an implicit read,
+-# and whether or not it is an implicit write. These should match the specification 
++# and whether or not it is an implicit write. These should match the specification
+ # of the C API but without the `XRFdc_` prefix in the case of the function name.
+ 
+ #    Name                 , C Type                      , RO   , WO   , ImpR , ImpW
+ _block_props = [
+-    ("BlockStatus"        , "XRFdc_BlockStatus"         , True                      ),
+-    ("MixerSettings"      , "XRFdc_Mixer_Settings"      , False                     ),
+-    ("QMCSettings"        , "XRFdc_QMC_Settings"        , False                     ),
+-    ("CoarseDelaySettings", "XRFdc_CoarseDelay_Settings", False                     ),
+-    ("NyquistZone"        , "u32"                       , False                     ),
+-    ("EnabledInterrupts"  , "u32"                       , True                      ),
+-    ("PwrMode"            , "XRFdc_Pwr_Mode_Settings"   , False                     )
++    ("BlockStatus", "XRFdc_BlockStatus", True),
++    ("MixerSettings", "XRFdc_Mixer_Settings", False),
++    ("QMCSettings", "XRFdc_QMC_Settings", False),
++    ("CoarseDelaySettings", "XRFdc_CoarseDelay_Settings", False),
++    ("NyquistZone", "u32", False),
++    ("EnabledInterrupts", "u32", True),
++    ("PwrMode", "XRFdc_Pwr_Mode_Settings", False),
+ ]
+ 
+ _adc_props = [
+-    ("DecimationFactor"   , "u32"                       , False, False, True , True ),
+-    ("CalibrationMode"    , "u8"                        , False, False, True , True ),
+-    ("FabRdVldWords"      , "u32"                       , False, False, False, True ),
+-    ("FabWrVldWords"      , "u32"                       , True , False, False, False),
+-    ("DecimationFactorObs", "u32"                       , False, False, True , True ),
+-    ("FabRdVldWordsObs"   , "u32"                       , False, False, False, True ),
+-    ("FabWrVldWordsObs"   , "u32"                       , True , False, False, False),
+-    ("Dither"             , "u32"                       , False, False, True , True ),
+-    ("CalFreeze"          , "XRFdc_Cal_Freeze_Settings" , False, False, True , True ),
+-    ("DSA"                , "XRFdc_DSA_Settings"        , False, False, True , True )
++    ("DecimationFactor", "u32", False, False, True, True),
++    ("CalibrationMode", "u8", False, False, True, True),
++    ("FabRdVldWords", "u32", False, False, False, True),
++    ("FabWrVldWords", "u32", True, False, False, False),
++    ("DecimationFactorObs", "u32", False, False, True, True),
++    ("FabRdVldWordsObs", "u32", False, False, False, True),
++    ("FabWrVldWordsObs", "u32", True, False, False, False),
++    ("Dither", "u32", False, False, True, True),
++    ("CalFreeze", "XRFdc_Cal_Freeze_Settings", False, False, True, True),
++    ("DSA", "XRFdc_DSA_Settings", False, False, True, True),
+ ]
+ 
+ _dac_props = [
+-    ("InterpolationFactor", "u32"                       , False, False, True , True ),
+-    ("DecoderMode"        , "u32"                       , False, False, True , True ),
+-    ("OutputCurr"         , "int"                       , True , False, True , True ),
+-    ("InvSincFIR"         , "u16"                       , False, False, True , True ),
+-    ("FabRdVldWords"      , "u32"                       , True , False, False, False),
+-    ("FabWrVldWords"      , "u32"                       , False, False, False, True ),
+-    ("DataPathMode"       , "u32"                       , False, False, True , True ),
+-    ("IMRPassMode"        , "u32"                       , False, False, True , True ),
+-    ("DACCompMode"        , "u32"                       , False, False, True , True )
++    ("InterpolationFactor", "u32", False, False, True, True),
++    ("DecoderMode", "u32", False, False, True, True),
++    ("OutputCurr", "int", True, False, True, True),
++    ("InvSincFIR", "u16", False, False, True, True),
++    ("FabRdVldWords", "u32", True, False, False, False),
++    ("FabWrVldWords", "u32", False, False, False, True),
++    ("DataPathMode", "u32", False, False, True, True),
++    ("IMRPassMode", "u32", False, False, True, True),
++    ("DACCompMode", "u32", False, False, True, True),
+ ]
+ 
+ _tile_props = [
+-    ("FabClkOutDiv"       , "u16"                       , False                     ),
+-    ("FIFOStatus"         , "u8"                        , True                      ),
+-    ("ClockSource"        , "u32"                       , True                      ),
+-    ("PLLLockStatus"      , "u32"                       , True                      ),
+-    ("PLLConfig"          , "XRFdc_PLL_Settings"        , True                      )
++    ("FabClkOutDiv", "u16", False),
++    ("FIFOStatus", "u8", True),
++    ("ClockSource", "u32", True),
++    ("PLLLockStatus", "u32", True),
++    ("PLLConfig", "XRFdc_PLL_Settings", True),
+ ]
+ 
+ _rfdc_props = [
+-    ("IPStatus"           , "XRFdc_IPStatus"             , True                      ),
+-    ("ClkDistribution"    , "XRFdc_Distribution_Settings", False                     )
++    ("IPStatus", "XRFdc_IPStatus", True),
++    ("ClkDistribution", "XRFdc_Distribution_Settings", False),
+ ]
+ 
+ # Next we define some helper functions for creating properties and
+ # packing/unpacking Python types into C structures
+ 
++
+ class PropertyDict(dict):
+     """Subclass of dict to support update callbacks to C driver"""
++
+     def __init__(self, *args, **kwargs):
+-        self.callback = lambda _:0
++        self.callback = lambda _: 0
+         self.update(*args, **kwargs)
+ 
+     def set_callback(self, callback):
+-        """Set the callback function triggered on __setitem__""" 
++        """Set the callback function triggered on __setitem__"""
+         self.callback = callback
+ 
+     def __setitem__(self, key, val):
+@@ -130,30 +131,34 @@ def _pack_value(typename, value):
+ 
+ 
+ def _unpack_value(value):
+-    
++
+     # Guard against python primitives
+-    if type(value) in [int,str,bool]:
++    if type(value) in [int, str, bool]:
+         return value
+ 
+     ctype = _ffi.typeof(value)
+ 
+     # Dereference pointers
+-    if ctype.kind == 'pointer':
++    if ctype.kind == "pointer":
+         return _unpack_value(value[0])
+ 
+     # Struct -> Dict
+-    elif ctype.kind == 'struct':
+-        return PropertyDict({
+-            k: _unpack_value(getattr(value, k)) if ktype.type.kind != 'primitive' else \
+-                             getattr(value, k)
+-            for (k,ktype) in ctype.fields
+-        })
++    elif ctype.kind == "struct":
++        return PropertyDict(
++            {
++                k: (
++                    _unpack_value(getattr(value, k))
++                    if ktype.type.kind != "primitive"
++                    else getattr(value, k)
++                )
++                for (k, ktype) in ctype.fields
++            }
++        )
+ 
+     # Array -> List
+-    elif ctype.kind == 'array':
++    elif ctype.kind == "array":
+         return [
+-            _unpack_value(value[i]) if ctype.item.kind != 'primitive' else \
+-                          value[i]
++            _unpack_value(value[i]) if ctype.item.kind != "primitive" else value[i]
+             for i in range(ctype.length)
+         ]
+ 
+@@ -161,23 +166,28 @@ def _unpack_value(value):
+     else:
+         return value[0]
+ 
++
+ # The underlying C functions for generic behaviour (applies to both DAC
+ # and ADC blocks) expect an argument for the type of block used.
+ # Other functions leave the type of block implicit. We handle this distinction
+ # by bubbling up through either `_call_function` or `_call_function_implicit`
+-# calls. 
++# calls.
+ 
+ 
+-def _create_c_property(name, typename, readonly, writeonly=False, implicit_read=False, implicit_write=False):
++def _create_c_property(
++    name, typename, readonly, writeonly=False, implicit_read=False, implicit_write=False
++):
+     def _get(self):
+         value = _ffi.new(f"{typename}*")
+-        c_func = self._call_function if not implicit_read else \
+-            self._call_function_implicit
++        c_func = (
++            self._call_function if not implicit_read else self._call_function_implicit
++        )
+         c_func(f"Get{name}", value)
+         value = _unpack_value(value)
+         if isinstance(value, PropertyDict):
+-            value.set_callback(lambda value: c_func(
+-                f"Set{name}", _pack_value(typename, value)))
++            value.set_callback(
++                lambda value: c_func(f"Set{name}", _pack_value(typename, value))
++            )
+         return value
+ 
+     def _set(self, value):
+@@ -193,10 +203,12 @@ def _create_c_property(name, typename, readonly, writeonly=False, implicit_read=
+     else:
+         return property(_get, _set)
+ 
++
+ # Finally we can define the object hierarchy. Each element of the object
+ # hierarchy has a `_call_function` method which handles adding the
+ # block/tile/toplevel arguments to the list of function parameters.
+ 
++
+ class RFdcThreshold:
+     def __init__(self, parent, index):
+         self._parent = parent
+@@ -204,37 +216,46 @@ class RFdcThreshold:
+ 
+         self._call_function = parent._call_function
+         self._call_function_implicit = parent._call_function_implicit
+-        setattr(RFdcThreshold, '_settings',
+-                _create_c_property('ThresholdSettings', 'XRFdc_Threshold_Settings',
+-                False, False, True, True
+-        ))
+-
++        setattr(
++            RFdcThreshold,
++            "_settings",
++            _create_c_property(
++                "ThresholdSettings",
++                "XRFdc_Threshold_Settings",
++                False,
++                False,
++                True,
++                True,
++            ),
++        )
+ 
+     def SetClrMode(self, clr_mode):
+-        self._parent._call_function_implicit("SetThresholdClrMode", self._index+1, clr_mode)
++        self._parent._call_function_implicit(
++            "SetThresholdClrMode", self._index + 1, clr_mode
++        )
+ 
+     def StickyClear(self):
+-        self._parent._call_function_implicit("ThresholdStickyClear", self._index+1)
++        self._parent._call_function_implicit("ThresholdStickyClear", self._index + 1)
+ 
+     @property
+     def Settings(self):
+         raw_settings = self._settings
+         return {
+-            'ThresholdMode'    : raw_settings['ThresholdMode'    ][self._index],
+-            'ThresholdAvgVal'  : raw_settings['ThresholdAvgVal'  ][self._index],
+-            'ThresholdUnderVal': raw_settings['ThresholdUnderVal'][self._index],
+-            'ThresholdOverVal' : raw_settings['ThresholdOverVal' ][self._index]
++            "ThresholdMode": raw_settings["ThresholdMode"][self._index],
++            "ThresholdAvgVal": raw_settings["ThresholdAvgVal"][self._index],
++            "ThresholdUnderVal": raw_settings["ThresholdUnderVal"][self._index],
++            "ThresholdOverVal": raw_settings["ThresholdOverVal"][self._index],
+         }
+ 
+     @Settings.setter
+     def Settings(self, settings):
+-        kpack = lambda x, i : [x,0] if i==0 else [0,x]
++        kpack = lambda x, i: [x, 0] if i == 0 else [0, x]
+         self._settings = {
+-            'UpdateThreshold'  : self._index+1,
+-            'ThresholdMode'    : kpack(settings['ThresholdMode'    ], self._index),
+-            'ThresholdAvgVal'  : kpack(settings['ThresholdAvgVal'  ], self._index),
+-            'ThresholdUnderVal': kpack(settings['ThresholdUnderVal'], self._index),
+-            'ThresholdOverVal' : kpack(settings['ThresholdOverVal' ], self._index)
++            "UpdateThreshold": self._index + 1,
++            "ThresholdMode": kpack(settings["ThresholdMode"], self._index),
++            "ThresholdAvgVal": kpack(settings["ThresholdAvgVal"], self._index),
++            "ThresholdUnderVal": kpack(settings["ThresholdUnderVal"], self._index),
++            "ThresholdOverVal": kpack(settings["ThresholdOverVal"], self._index),
+         }
+ 
+ 
+@@ -245,19 +266,19 @@ class RFdcBlock:
+ 
+     def _call_function(self, name, *args):
+         return self._parent._call_function(name, self._index, *args)
+-    
++
+     def ResetNCOPhase(self):
+         self._call_function("ResetNCOPhase")
+ 
+     def UpdateEvent(self, Event):
+         self._call_function("UpdateEvent", Event)
+-        
++
+     def ResetInternalFIFOWidth(self):
+         self._call_function("ResetInternalFIFOWidth")
+-        
++
+     def GetConnectedIData(self):
+         self._call_function("GetConnectedIData")
+-        
++
+     def GetConnectedQData(self):
+         self._call_function("GetConnectedQData")
+ 
+@@ -268,7 +289,7 @@ class RFdcDacBlock(RFdcBlock):
+ 
+     def _call_function_implicit(self, name, *args):
+         return self._parent._call_function_implicit(name, self._index, *args)
+-    
++
+     def SetDACVOP(self, uACurrent):
+         self._call_function_implicit("SetDACVOP", uACurrent)
+ 
+@@ -280,21 +301,20 @@ class RFdcAdcBlock(RFdcBlock):
+ 
+     def _call_function_implicit(self, name, *args):
+         return self._parent._call_function_implicit(name, self._index, *args)
+-        
++
+     def DisableCoefficientsOverride(self, CalibrationBlock):
+         self._call_function_implicit("DisableCoefficientsOverride", CalibrationBlock)
+-        
++
+     def ResetInternalFIFOWidthObs(self):
+         self._call_function("ResetInternalFIFOWidthObs")
+-        
++
+     def SetCalCoefficients(self, CalibrationBlock, *CoeffPtr):
+         self._call_function_implicit("SetCalCoefficients", CalibrationBlock, *CoeffPtr)
+-        
++
+     def GetCalCoefficients(self, CalibrationBlock, *CoeffPtr):
+         self._call_function_implicit("GetCalCoefficients", CalibrationBlock, *CoeffPtr)
+ 
+ 
+-
+ class RFdcTile:
+     def __init__(self, parent, index):
+         self._index = index
+@@ -314,7 +334,7 @@ class RFdcTile:
+ 
+     def Reset(self):
+         self._call_function("Reset")
+-    
++
+     def SetupFIFO(self, Enable):
+         self._call_function("SetupFIFO", Enable)
+ 
+@@ -337,84 +357,109 @@ class RFdcAdcTile(RFdcTile):
+         super().__init__(*args)
+         self._type = _lib.XRFDC_ADC_TILE
+         self.blocks = [RFdcAdcBlock(self, i) for i in range(4)]
+-        
++
+     def SetupFIFOObs(self, Enable):
+         self._call_function("SetupFIFOObs", Enable)
+-        
++
+     def SetupFIFOBoth(self, Enable):
+         self._call_function("SetupFIFOBoth", Enable)
+-        
++
+     def GetFIFOStatusObs(self, *EnablePtr):
+         self._call_function("GetFIFOStatusObs", *EnablePtr)
+ 
+ 
+ class RFdc(pynq.DefaultIP):
+-    """The class RFdc is bound to the IP xilinx.com:ip:usp_rf_data_converter:2.3,
+-    xilinx.com:ip:usp_rf_data_converter:2.4 or xilinx.com:ip:usp_rf_data_converter:2.6.
+-    Once the overlay is loaded, the data converter IP will be allocated the driver
+-    code implemented in this class.
+-
+-    For a complete list of wrapped functions see:
+-    https://github.com/Xilinx/PYNQ/tree/master/sdbuild/packages/xrfdc/package
+-    """
+-    
+-    bindto = ["xilinx.com:ip:usp_rf_data_converter:2.6",
+-              "xilinx.com:ip:usp_rf_data_converter:2.4", 
+-              "xilinx.com:ip:usp_rf_data_converter:2.3"]
++    bindto = [
++        "xilinx.com:ip:usp_rf_data_converter:2.6",
++        "xilinx.com:ip:usp_rf_data_converter:2.4",
++        "xilinx.com:ip:usp_rf_data_converter:2.3",
++    ]
+ 
+     def __init__(self, description):
+         super().__init__(description)
+-        if 'parameters' in description:
++        if "parameters" in description:
+             from .config import populate_config
+-            self._config = _ffi.new('XRFdc_Config*')
+-            populate_config(self._config, description['parameters'])
++
++            self._config = _ffi.new("XRFdc_Config*")
++            populate_config(self._config, description["parameters"])
+             pass
+         else:
+-            warnings.warn("Please use an hwh file with the RFSoC driver"
+-                          " the driver cannot be loaded")
++            warnings.warn(
++                "Please use an hwh file with the RFSoC driver"
++                " the driver cannot be loaded"
++            )
+             raise pynq.UnsupportedConfiguration()
+         self._instance = _ffi.new("XRFdc*")
+         self._config.BaseAddr = self.mmio.array.ctypes.data
+         _lib.XRFdc_CfgInitialize(self._instance, self._config)
+         self.adc_tiles = [RFdcAdcTile(self, i) for i in range(4)]
+         self.dac_tiles = [RFdcDacTile(self, i) for i in range(4)]
++        self.adc_mts_config = _ffi.new("XRFdc_MultiConverter_Sync_Config*")
++        self.dac_mts_config = _ffi.new("XRFdc_MultiConverter_Sync_Config*")
+ 
+     def _call_function(self, name, *args):
+         _safe_wrapper(f"XRFdc_{name}", self._instance, *args)
+ 
++    def adc_mts_init(self, RefTile):
++        _safe_wrapper("XRFdc_MultiConverter_Init", self.adc_mts_config, cffi.FFI.NULL, cffi.FFI.NULL, RefTile)
+ 
+-# Finally we can add our data-driven properties to each class in the hierarchy
++    def dac_mts_init(self, RefTile):
++        _safe_wrapper("XRFdc_MultiConverter_Init", self.dac_mts_config, cffi.FFI.NULL, cffi.FFI.NULL, RefTile)
+ 
+-for (name, typename, readonly) in _block_props:
+-    setattr(RFdcBlock, name, _create_c_property(name, typename, readonly))
++    def adc_mts_sync(self):
++        _safe_wrapper("XRFdc_MultiConverter_Sync", self._instance, ADC_TILE, self.adc_mts_config)
++
++    def dac_mts_sync(self):
++        _safe_wrapper("XRFdc_MultiConverter_Sync", self._instance, DAC_TILE, self.dac_mts_config)
+ 
+-for (name, typename, readonly, writeonly, implicit_read, implicit_write) in _adc_props:
+-    setattr(RFdcAdcBlock, name, _create_c_property(name, typename, readonly, writeonly,
+-        implicit_read, implicit_write))
++    def mts_sysref_enable(self, SysRefEnable=True):
++        en = 1 if SysRefEnable else 0
++        _safe_wrapper("XRFdc_MTS_Sysref_Config", self._instance, self.dac_mts_config, self.adc_mts_config, en)
+ 
+-for (name, typename, readonly, writeonly, implicit_read, implicit_write) in _dac_props:
+-    setattr(RFdcDacBlock, name, _create_c_property(name, typename, readonly, writeonly,
+-        implicit_read, implicit_write))
++# Finally we can add our data-driven properties to each class in the hierarchy
++for name, typename, readonly in _block_props:
++    setattr(RFdcBlock, name, _create_c_property(name, typename, readonly))
+ 
+-for (name, typename, readonly) in _tile_props:
++for name, typename, readonly, writeonly, implicit_read, implicit_write in _adc_props:
++    setattr(
++        RFdcAdcBlock,
++        name,
++        _create_c_property(
++            name, typename, readonly, writeonly, implicit_read, implicit_write
++        ),
++    )
++
++for name, typename, readonly, writeonly, implicit_read, implicit_write in _dac_props:
++    setattr(
++        RFdcDacBlock,
++        name,
++        _create_c_property(
++            name, typename, readonly, writeonly, implicit_read, implicit_write
++        ),
++    )
++
++for name, typename, readonly in _tile_props:
+     setattr(RFdcTile, name, _create_c_property(name, typename, readonly))
+ 
+-for (name, typename, readonly) in _rfdc_props:
++for name, typename, readonly in _rfdc_props:
+     setattr(RFdc, name, _create_c_property(name, typename, readonly))
+ 
+ # Some of our more important #define constants
++ADC_TILE = 0x0
++DAC_TILE = 0x1
++
+ CLK_SRC_PLL = 0x1
+ CLK_SRC_EXT = 0x2
+ 
+ EVNT_SRC_IMMEDIATE = 0x00000000
+-EVNT_SRC_SLICE     = 0x00000001
+-EVNT_SRC_TILE      = 0x00000002
+-EVNT_SRC_SYSREF    = 0x00000003
+-EVNT_SRC_MARKER    = 0x00000004
+-EVNT_SRC_PL        = 0x00000005
+-EVENT_MIXER        = 0x00000001
+-EVENT_CRSE_DLY     = 0x00000002
+-EVENT_QMC          = 0x00000004
++EVNT_SRC_SLICE = 0x00000001
++EVNT_SRC_TILE = 0x00000002
++EVNT_SRC_SYSREF = 0x00000003
++EVNT_SRC_MARKER = 0x00000004
++EVNT_SRC_PL = 0x00000005
++EVENT_MIXER = 0x00000001
++EVENT_CRSE_DLY = 0x00000002
++EVENT_QMC = 0x00000004
+ 
+ MIXER_MODE_OFF = 0x0
+ MIXER_MODE_C2C = 0x1
+@@ -423,31 +468,28 @@ MIXER_MODE_R2C = 0x3
+ MIXER_MODE_R2R = 0x4
+ 
+ MIXER_TYPE_COARSE = 0x1
+-MIXER_TYPE_FINE   = 0x2
+-MIXER_TYPE_OFF    = 0x3
++MIXER_TYPE_FINE = 0x2
++MIXER_TYPE_OFF = 0x3
+ 
+-COARSE_MIX_OFF                     = 0x0
+-COARSE_MIX_SAMPLE_FREQ_BY_TWO      = 0x2
+-COARSE_MIX_SAMPLE_FREQ_BY_FOUR     = 0x4
++COARSE_MIX_OFF = 0x0
++COARSE_MIX_SAMPLE_FREQ_BY_TWO = 0x2
++COARSE_MIX_SAMPLE_FREQ_BY_FOUR = 0x4
+ COARSE_MIX_MIN_SAMPLE_FREQ_BY_FOUR = 0x8
+-COARSE_MIX_BYPASS                  = 0x10
++COARSE_MIX_BYPASS = 0x10
+ 
+ MIXER_SCALE_AUTO = 0x0
+-MIXER_SCALE_1P0  = 0x1
+-MIXER_SCALE_0P7  = 0x2
++MIXER_SCALE_1P0 = 0x1
++MIXER_SCALE_0P7 = 0x2
+ 
+-FAB_CLK_DIV1   = 0x1
+-FAB_CLK_DIV2   = 0x2
+-FAB_CLK_DIV4   = 0x3
+-FAB_CLK_DIV8   = 0x4
+-FAB_CLK_DIV16  = 0x5
++FAB_CLK_DIV1 = 0x1
++FAB_CLK_DIV2 = 0x2
++FAB_CLK_DIV4 = 0x3
++FAB_CLK_DIV8 = 0x4
++FAB_CLK_DIV16 = 0x5
+ 
+ THRESHOLD_CLRMD_MANUAL_CLR = 0x1
+-THRESHOLD_CLRMD_AUTO_CLR   = 0x2
+-TRSHD_OFF                  = 0x0
+-TRSHD_STICKY_OVER          = 0x1
+-TRSHD_STICKY_UNDER         = 0x2
+-TRSHD_HYSTERISIS           = 0x3
+-
+-
+-
++THRESHOLD_CLRMD_AUTO_CLR = 0x2
++TRSHD_OFF = 0x0
++TRSHD_STICKY_OVER = 0x1
++TRSHD_STICKY_UNDER = 0x2
++TRSHD_HYSTERISIS = 0x3
+diff --git a/sdbuild/packages/xrfdc/package/xrfdc/config.py b/../PYNQ/sdbuild/packages/xrfdc/package/xrfdc/config.py
+index 3f2f4b46..de31b756 100644
+--- a/sdbuild/packages/xrfdc/package/xrfdc/config.py
++++ b/../PYNQ/sdbuild/packages/xrfdc/package/xrfdc/config.py
 @@ -2,82 +2,78 @@
  #   SPDX-License-Identifier: BSD-3-Clause
  
@@ -378,7 +958,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
          return float(val)
      else:
          raise ValueError(f"{dtype} is not int or double")
-@@ -94,13 +90,15 @@
+@@ -94,13 +90,15 @@ def populate_config(obj, params):
          _set_configs(obj.DACTile_Config[i], params, _DAC_Tile, i)
          _set_configs(obj.ADCTile_Config[i], params, _ADC_Tile, i)
          for j in range(4):
@@ -404,584 +984,10 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
 +            _set_configs(
 +                obj.ADCTile_Config[i].ADCBlock_Digital_Config[j], params, _ADC_DDP, i, j
 +            )
-diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xrfdc/package a/sdbuild/packages/xrfdc/package b/sdbuild/packages/xrfdc/package
---- a/sdbuild/packages/xrfdc/package
-+++ b/sdbuild/packages/xrfdc/package
-@@ -1,31 +1,30 @@
- #   Copyright (c) 2018, Xilinx, Inc.
- #   SPDX-License-Identifier: BSD-3-Clause
- 
-+import os
-+import warnings
-+from time import sleep
- 
- import cffi
--import os
- import pynq
--import warnings
- from wurlitzer import pipes
- 
--
--
--
- _THIS_DIR = os.path.dirname(__file__)
- 
--with open(os.path.join(_THIS_DIR, 'xrfdc_functions.c'), 'r') as f:
-+with open(os.path.join(_THIS_DIR, "xrfdc_functions.c"), "r") as f:
-     header_text = f.read()
- 
- _ffi = cffi.FFI()
- _ffi.cdef(header_text)
- 
--_lib = _ffi.dlopen(os.path.join(_THIS_DIR, 'libxrfdc.so'))
-+_lib = _ffi.dlopen(os.path.join(_THIS_DIR, "libxrfdc.so"))
- 
- 
- # Next stage is a simple wrapper function which checks the existance of the
- # function in the library and the return code and throws an exception if either
- # fails.
- 
-+
- def _safe_wrapper(name, *args, **kwargs):
-     with pipes() as (c1, c2):
-         if not hasattr(_lib, name):
-@@ -46,69 +45,71 @@
- # class in the hierarchy. Each element of the array is a tuple consisting of
- # the property name, the type of the property, whether or not it is
- # read-only, whether or not it is write-only, whether or not it is an implicit read,
--# and whether or not it is an implicit write. These should match the specification 
-+# and whether or not it is an implicit write. These should match the specification
- # of the C API but without the `XRFdc_` prefix in the case of the function name.
- 
- #    Name                 , C Type                      , RO   , WO   , ImpR , ImpW
- _block_props = [
--    ("BlockStatus"        , "XRFdc_BlockStatus"         , True                      ),
--    ("MixerSettings"      , "XRFdc_Mixer_Settings"      , False                     ),
--    ("QMCSettings"        , "XRFdc_QMC_Settings"        , False                     ),
--    ("CoarseDelaySettings", "XRFdc_CoarseDelay_Settings", False                     ),
--    ("NyquistZone"        , "u32"                       , False                     ),
--    ("EnabledInterrupts"  , "u32"                       , True                      ),
--    ("PwrMode"            , "XRFdc_Pwr_Mode_Settings"   , False                     )
-+    ("BlockStatus", "XRFdc_BlockStatus", True),
-+    ("MixerSettings", "XRFdc_Mixer_Settings", False),
-+    ("QMCSettings", "XRFdc_QMC_Settings", False),
-+    ("CoarseDelaySettings", "XRFdc_CoarseDelay_Settings", False),
-+    ("NyquistZone", "u32", False),
-+    ("EnabledInterrupts", "u32", True),
-+    ("PwrMode", "XRFdc_Pwr_Mode_Settings", False),
- ]
- 
- _adc_props = [
--    ("DecimationFactor"   , "u32"                       , False, False, True , True ),
--    ("CalibrationMode"    , "u8"                        , False, False, True , True ),
--    ("FabRdVldWords"      , "u32"                       , False, False, False, True ),
--    ("FabWrVldWords"      , "u32"                       , True , False, False, False),
--    ("DecimationFactorObs", "u32"                       , False, False, True , True ),
--    ("FabRdVldWordsObs"   , "u32"                       , False, False, False, True ),
--    ("FabWrVldWordsObs"   , "u32"                       , True , False, False, False),
--    ("Dither"             , "u32"                       , False, False, True , True ),
--    ("CalFreeze"          , "XRFdc_Cal_Freeze_Settings" , False, False, True , True ),
--    ("DSA"                , "XRFdc_DSA_Settings"        , False, False, True , True )
-+    ("DecimationFactor", "u32", False, False, True, True),
-+    ("CalibrationMode", "u8", False, False, True, True),
-+    ("FabRdVldWords", "u32", False, False, False, True),
-+    ("FabWrVldWords", "u32", True, False, False, False),
-+    ("DecimationFactorObs", "u32", False, False, True, True),
-+    ("FabRdVldWordsObs", "u32", False, False, False, True),
-+    ("FabWrVldWordsObs", "u32", True, False, False, False),
-+    ("Dither", "u32", False, False, True, True),
-+    ("CalFreeze", "XRFdc_Cal_Freeze_Settings", False, False, True, True),
-+    ("DSA", "XRFdc_DSA_Settings", False, False, True, True),
- ]
- 
- _dac_props = [
--    ("InterpolationFactor", "u32"                       , False, False, True , True ),
--    ("DecoderMode"        , "u32"                       , False, False, True , True ),
--    ("OutputCurr"         , "int"                       , True , False, True , True ),
--    ("InvSincFIR"         , "u16"                       , False, False, True , True ),
--    ("FabRdVldWords"      , "u32"                       , True , False, False, False),
--    ("FabWrVldWords"      , "u32"                       , False, False, False, True ),
--    ("DataPathMode"       , "u32"                       , False, False, True , True ),
--    ("IMRPassMode"        , "u32"                       , False, False, True , True ),
--    ("DACCompMode"        , "u32"                       , False, False, True , True )
-+    ("InterpolationFactor", "u32", False, False, True, True),
-+    ("DecoderMode", "u32", False, False, True, True),
-+    ("OutputCurr", "int", True, False, True, True),
-+    ("InvSincFIR", "u16", False, False, True, True),
-+    ("FabRdVldWords", "u32", True, False, False, False),
-+    ("FabWrVldWords", "u32", False, False, False, True),
-+    ("DataPathMode", "u32", False, False, True, True),
-+    ("IMRPassMode", "u32", False, False, True, True),
-+    ("DACCompMode", "u32", False, False, True, True),
- ]
- 
- _tile_props = [
--    ("FabClkOutDiv"       , "u16"                       , False                     ),
--    ("FIFOStatus"         , "u8"                        , True                      ),
--    ("ClockSource"        , "u32"                       , True                      ),
--    ("PLLLockStatus"      , "u32"                       , True                      ),
--    ("PLLConfig"          , "XRFdc_PLL_Settings"        , True                      )
-+    ("FabClkOutDiv", "u16", False),
-+    ("FIFOStatus", "u8", True),
-+    ("ClockSource", "u32", True),
-+    ("PLLLockStatus", "u32", True),
-+    ("PLLConfig", "XRFdc_PLL_Settings", True),
- ]
- 
- _rfdc_props = [
--    ("IPStatus"           , "XRFdc_IPStatus"             , True                      ),
--    ("ClkDistribution"    , "XRFdc_Distribution_Settings", False                     )
-+    ("IPStatus", "XRFdc_IPStatus", True),
-+    ("ClkDistribution", "XRFdc_Distribution_Settings", False),
- ]
- 
- # Next we define some helper functions for creating properties and
- # packing/unpacking Python types into C structures
- 
-+
- class PropertyDict(dict):
-     """Subclass of dict to support update callbacks to C driver"""
-+
-     def __init__(self, *args, **kwargs):
--        self.callback = lambda _:0
-+        self.callback = lambda _: 0
-         self.update(*args, **kwargs)
- 
-     def set_callback(self, callback):
--        """Set the callback function triggered on __setitem__""" 
-+        """Set the callback function triggered on __setitem__"""
-         self.callback = callback
- 
-     def __setitem__(self, key, val):
-@@ -130,30 +131,34 @@
- 
- 
- def _unpack_value(value):
--    
-+
-     # Guard against python primitives
--    if type(value) in [int,str,bool]:
-+    if type(value) in [int, str, bool]:
-         return value
- 
-     ctype = _ffi.typeof(value)
- 
-     # Dereference pointers
--    if ctype.kind == 'pointer':
-+    if ctype.kind == "pointer":
-         return _unpack_value(value[0])
- 
-     # Struct -> Dict
--    elif ctype.kind == 'struct':
--        return PropertyDict({
--            k: _unpack_value(getattr(value, k)) if ktype.type.kind != 'primitive' else \
--                             getattr(value, k)
--            for (k,ktype) in ctype.fields
--        })
-+    elif ctype.kind == "struct":
-+        return PropertyDict(
-+            {
-+                k: (
-+                    _unpack_value(getattr(value, k))
-+                    if ktype.type.kind != "primitive"
-+                    else getattr(value, k)
-+                )
-+                for (k, ktype) in ctype.fields
-+            }
-+        )
- 
-     # Array -> List
--    elif ctype.kind == 'array':
-+    elif ctype.kind == "array":
-         return [
--            _unpack_value(value[i]) if ctype.item.kind != 'primitive' else \
--                          value[i]
-+            _unpack_value(value[i]) if ctype.item.kind != "primitive" else value[i]
-             for i in range(ctype.length)
-         ]
- 
-@@ -161,23 +166,28 @@
-     else:
-         return value[0]
- 
-+
- # The underlying C functions for generic behaviour (applies to both DAC
- # and ADC blocks) expect an argument for the type of block used.
- # Other functions leave the type of block implicit. We handle this distinction
- # by bubbling up through either `_call_function` or `_call_function_implicit`
--# calls. 
-+# calls.
- 
- 
--def _create_c_property(name, typename, readonly, writeonly=False, implicit_read=False, implicit_write=False):
-+def _create_c_property(
-+    name, typename, readonly, writeonly=False, implicit_read=False, implicit_write=False
-+):
-     def _get(self):
-         value = _ffi.new(f"{typename}*")
--        c_func = self._call_function if not implicit_read else \
--            self._call_function_implicit
-+        c_func = (
-+            self._call_function if not implicit_read else self._call_function_implicit
-+        )
-         c_func(f"Get{name}", value)
-         value = _unpack_value(value)
-         if isinstance(value, PropertyDict):
--            value.set_callback(lambda value: c_func(
--                f"Set{name}", _pack_value(typename, value)))
-+            value.set_callback(
-+                lambda value: c_func(f"Set{name}", _pack_value(typename, value))
-+            )
-         return value
- 
-     def _set(self, value):
-@@ -193,10 +203,12 @@
-     else:
-         return property(_get, _set)
- 
-+
- # Finally we can define the object hierarchy. Each element of the object
- # hierarchy has a `_call_function` method which handles adding the
- # block/tile/toplevel arguments to the list of function parameters.
- 
-+
- class RFdcThreshold:
-     def __init__(self, parent, index):
-         self._parent = parent
-@@ -204,37 +216,46 @@
- 
-         self._call_function = parent._call_function
-         self._call_function_implicit = parent._call_function_implicit
--        setattr(RFdcThreshold, '_settings',
--                _create_c_property('ThresholdSettings', 'XRFdc_Threshold_Settings',
--                False, False, True, True
--        ))
--
-+        setattr(
-+            RFdcThreshold,
-+            "_settings",
-+            _create_c_property(
-+                "ThresholdSettings",
-+                "XRFdc_Threshold_Settings",
-+                False,
-+                False,
-+                True,
-+                True,
-+            ),
-+        )
- 
-     def SetClrMode(self, clr_mode):
--        self._parent._call_function_implicit("SetThresholdClrMode", self._index+1, clr_mode)
-+        self._parent._call_function_implicit(
-+            "SetThresholdClrMode", self._index + 1, clr_mode
-+        )
- 
-     def StickyClear(self):
--        self._parent._call_function_implicit("ThresholdStickyClear", self._index+1)
-+        self._parent._call_function_implicit("ThresholdStickyClear", self._index + 1)
- 
-     @property
-     def Settings(self):
-         raw_settings = self._settings
-         return {
--            'ThresholdMode'    : raw_settings['ThresholdMode'    ][self._index],
--            'ThresholdAvgVal'  : raw_settings['ThresholdAvgVal'  ][self._index],
--            'ThresholdUnderVal': raw_settings['ThresholdUnderVal'][self._index],
--            'ThresholdOverVal' : raw_settings['ThresholdOverVal' ][self._index]
-+            "ThresholdMode": raw_settings["ThresholdMode"][self._index],
-+            "ThresholdAvgVal": raw_settings["ThresholdAvgVal"][self._index],
-+            "ThresholdUnderVal": raw_settings["ThresholdUnderVal"][self._index],
-+            "ThresholdOverVal": raw_settings["ThresholdOverVal"][self._index],
-         }
- 
-     @Settings.setter
-     def Settings(self, settings):
--        kpack = lambda x, i : [x,0] if i==0 else [0,x]
-+        kpack = lambda x, i: [x, 0] if i == 0 else [0, x]
-         self._settings = {
--            'UpdateThreshold'  : self._index+1,
--            'ThresholdMode'    : kpack(settings['ThresholdMode'    ], self._index),
--            'ThresholdAvgVal'  : kpack(settings['ThresholdAvgVal'  ], self._index),
--            'ThresholdUnderVal': kpack(settings['ThresholdUnderVal'], self._index),
--            'ThresholdOverVal' : kpack(settings['ThresholdOverVal' ], self._index)
-+            "UpdateThreshold": self._index + 1,
-+            "ThresholdMode": kpack(settings["ThresholdMode"], self._index),
-+            "ThresholdAvgVal": kpack(settings["ThresholdAvgVal"], self._index),
-+            "ThresholdUnderVal": kpack(settings["ThresholdUnderVal"], self._index),
-+            "ThresholdOverVal": kpack(settings["ThresholdOverVal"], self._index),
-         }
- 
- 
-@@ -245,19 +266,19 @@
- 
-     def _call_function(self, name, *args):
-         return self._parent._call_function(name, self._index, *args)
--    
-+
-     def ResetNCOPhase(self):
-         self._call_function("ResetNCOPhase")
- 
-     def UpdateEvent(self, Event):
-         self._call_function("UpdateEvent", Event)
--        
-+
-     def ResetInternalFIFOWidth(self):
-         self._call_function("ResetInternalFIFOWidth")
--        
-+
-     def GetConnectedIData(self):
-         self._call_function("GetConnectedIData")
--        
-+
-     def GetConnectedQData(self):
-         self._call_function("GetConnectedQData")
- 
-@@ -268,7 +289,7 @@
- 
-     def _call_function_implicit(self, name, *args):
-         return self._parent._call_function_implicit(name, self._index, *args)
--    
-+
-     def SetDACVOP(self, uACurrent):
-         self._call_function_implicit("SetDACVOP", uACurrent)
- 
-@@ -280,21 +301,20 @@
- 
-     def _call_function_implicit(self, name, *args):
-         return self._parent._call_function_implicit(name, self._index, *args)
--        
-+
-     def DisableCoefficientsOverride(self, CalibrationBlock):
-         self._call_function_implicit("DisableCoefficientsOverride", CalibrationBlock)
--        
-+
-     def ResetInternalFIFOWidthObs(self):
-         self._call_function("ResetInternalFIFOWidthObs")
--        
-+
-     def SetCalCoefficients(self, CalibrationBlock, *CoeffPtr):
-         self._call_function_implicit("SetCalCoefficients", CalibrationBlock, *CoeffPtr)
--        
-+
-     def GetCalCoefficients(self, CalibrationBlock, *CoeffPtr):
-         self._call_function_implicit("GetCalCoefficients", CalibrationBlock, *CoeffPtr)
- 
- 
--
- class RFdcTile:
-     def __init__(self, parent, index):
-         self._index = index
-@@ -314,7 +334,7 @@
- 
-     def Reset(self):
-         self._call_function("Reset")
--    
-+
-     def SetupFIFO(self, Enable):
-         self._call_function("SetupFIFO", Enable)
- 
-@@ -337,84 +357,109 @@
-         super().__init__(*args)
-         self._type = _lib.XRFDC_ADC_TILE
-         self.blocks = [RFdcAdcBlock(self, i) for i in range(4)]
--        
-+
-     def SetupFIFOObs(self, Enable):
-         self._call_function("SetupFIFOObs", Enable)
--        
-+
-     def SetupFIFOBoth(self, Enable):
-         self._call_function("SetupFIFOBoth", Enable)
--        
-+
-     def GetFIFOStatusObs(self, *EnablePtr):
-         self._call_function("GetFIFOStatusObs", *EnablePtr)
- 
- 
- class RFdc(pynq.DefaultIP):
--    """The class RFdc is bound to the IP xilinx.com:ip:usp_rf_data_converter:2.3,
--    xilinx.com:ip:usp_rf_data_converter:2.4 or xilinx.com:ip:usp_rf_data_converter:2.6.
--    Once the overlay is loaded, the data converter IP will be allocated the driver
--    code implemented in this class.
--
--    For a complete list of wrapped functions see:
--    https://github.com/Xilinx/PYNQ/tree/master/sdbuild/packages/xrfdc/package
--    """
--    
--    bindto = ["xilinx.com:ip:usp_rf_data_converter:2.6",
--              "xilinx.com:ip:usp_rf_data_converter:2.4", 
--              "xilinx.com:ip:usp_rf_data_converter:2.3"]
-+    bindto = [
-+        "xilinx.com:ip:usp_rf_data_converter:2.6",
-+        "xilinx.com:ip:usp_rf_data_converter:2.4",
-+        "xilinx.com:ip:usp_rf_data_converter:2.3",
-+    ]
- 
-     def __init__(self, description):
-         super().__init__(description)
--        if 'parameters' in description:
-+        if "parameters" in description:
-             from .config import populate_config
--            self._config = _ffi.new('XRFdc_Config*')
--            populate_config(self._config, description['parameters'])
-+
-+            self._config = _ffi.new("XRFdc_Config*")
-+            populate_config(self._config, description["parameters"])
-             pass
-         else:
--            warnings.warn("Please use an hwh file with the RFSoC driver"
--                          " the driver cannot be loaded")
-+            warnings.warn(
-+                "Please use an hwh file with the RFSoC driver"
-+                " the driver cannot be loaded"
-+            )
-             raise pynq.UnsupportedConfiguration()
-         self._instance = _ffi.new("XRFdc*")
-         self._config.BaseAddr = self.mmio.array.ctypes.data
-         _lib.XRFdc_CfgInitialize(self._instance, self._config)
-         self.adc_tiles = [RFdcAdcTile(self, i) for i in range(4)]
-         self.dac_tiles = [RFdcDacTile(self, i) for i in range(4)]
-+        self.adc_mts_config = _ffi.new("XRFdc_MultiConverter_Sync_Config*")
-+        self.dac_mts_config = _ffi.new("XRFdc_MultiConverter_Sync_Config*")
- 
-     def _call_function(self, name, *args):
-         _safe_wrapper(f"XRFdc_{name}", self._instance, *args)
- 
-+    def adc_mts_init(self, RefTile):
-+        _safe_wrapper("XRFdc_MultiConverter_Init", self.adc_mts_config, cffi.FFI.NULL, cffi.FFI.NULL, RefTile)
- 
--# Finally we can add our data-driven properties to each class in the hierarchy
-+    def dac_mts_init(self, RefTile):
-+        _safe_wrapper("XRFdc_MultiConverter_Init", self.dac_mts_config, cffi.FFI.NULL, cffi.FFI.NULL, RefTile)
-+
-+    def adc_mts_sync(self):
-+        _safe_wrapper("XRFdc_MultiConverter_Sync", self._instance, ADC_TILE, self.adc_mts_config)
-+
-+    def dac_mts_sync(self):
-+        _safe_wrapper("XRFdc_MultiConverter_Sync", self._instance, DAC_TILE, self.dac_mts_config)
- 
--for (name, typename, readonly) in _block_props:
-+    def mts_sysref_enable(self, SysRefEnable=True):
-+        en = 1 if SysRefEnable else 0
-+        _safe_wrapper("XRFdc_MTS_Sysref_Config", self._instance, self.dac_mts_config, self.adc_mts_config, en)
-+
-+# Finally we can add our data-driven properties to each class in the hierarchy
-+for name, typename, readonly in _block_props:
-     setattr(RFdcBlock, name, _create_c_property(name, typename, readonly))
- 
--for (name, typename, readonly, writeonly, implicit_read, implicit_write) in _adc_props:
--    setattr(RFdcAdcBlock, name, _create_c_property(name, typename, readonly, writeonly,
--        implicit_read, implicit_write))
--
--for (name, typename, readonly, writeonly, implicit_read, implicit_write) in _dac_props:
--    setattr(RFdcDacBlock, name, _create_c_property(name, typename, readonly, writeonly,
--        implicit_read, implicit_write))
-+for name, typename, readonly, writeonly, implicit_read, implicit_write in _adc_props:
-+    setattr(
-+        RFdcAdcBlock,
-+        name,
-+        _create_c_property(
-+            name, typename, readonly, writeonly, implicit_read, implicit_write
-+        ),
-+    )
-+
-+for name, typename, readonly, writeonly, implicit_read, implicit_write in _dac_props:
-+    setattr(
-+        RFdcDacBlock,
-+        name,
-+        _create_c_property(
-+            name, typename, readonly, writeonly, implicit_read, implicit_write
-+        ),
-+    )
- 
--for (name, typename, readonly) in _tile_props:
-+for name, typename, readonly in _tile_props:
-     setattr(RFdcTile, name, _create_c_property(name, typename, readonly))
- 
--for (name, typename, readonly) in _rfdc_props:
-+for name, typename, readonly in _rfdc_props:
-     setattr(RFdc, name, _create_c_property(name, typename, readonly))
- 
- # Some of our more important #define constants
-+ADC_TILE = 0x0
-+DAC_TILE = 0x1
-+
- CLK_SRC_PLL = 0x1
- CLK_SRC_EXT = 0x2
- 
- EVNT_SRC_IMMEDIATE = 0x00000000
--EVNT_SRC_SLICE     = 0x00000001
--EVNT_SRC_TILE      = 0x00000002
--EVNT_SRC_SYSREF    = 0x00000003
--EVNT_SRC_MARKER    = 0x00000004
--EVNT_SRC_PL        = 0x00000005
--EVENT_MIXER        = 0x00000001
--EVENT_CRSE_DLY     = 0x00000002
--EVENT_QMC          = 0x00000004
-+EVNT_SRC_SLICE = 0x00000001
-+EVNT_SRC_TILE = 0x00000002
-+EVNT_SRC_SYSREF = 0x00000003
-+EVNT_SRC_MARKER = 0x00000004
-+EVNT_SRC_PL = 0x00000005
-+EVENT_MIXER = 0x00000001
-+EVENT_CRSE_DLY = 0x00000002
-+EVENT_QMC = 0x00000004
- 
- MIXER_MODE_OFF = 0x0
- MIXER_MODE_C2C = 0x1
-@@ -423,31 +468,28 @@
- MIXER_MODE_R2R = 0x4
- 
- MIXER_TYPE_COARSE = 0x1
--MIXER_TYPE_FINE   = 0x2
--MIXER_TYPE_OFF    = 0x3
-+MIXER_TYPE_FINE = 0x2
-+MIXER_TYPE_OFF = 0x3
- 
--COARSE_MIX_OFF                     = 0x0
--COARSE_MIX_SAMPLE_FREQ_BY_TWO      = 0x2
--COARSE_MIX_SAMPLE_FREQ_BY_FOUR     = 0x4
-+COARSE_MIX_OFF = 0x0
-+COARSE_MIX_SAMPLE_FREQ_BY_TWO = 0x2
-+COARSE_MIX_SAMPLE_FREQ_BY_FOUR = 0x4
- COARSE_MIX_MIN_SAMPLE_FREQ_BY_FOUR = 0x8
--COARSE_MIX_BYPASS                  = 0x10
-+COARSE_MIX_BYPASS = 0x10
- 
- MIXER_SCALE_AUTO = 0x0
--MIXER_SCALE_1P0  = 0x1
--MIXER_SCALE_0P7  = 0x2
-+MIXER_SCALE_1P0 = 0x1
-+MIXER_SCALE_0P7 = 0x2
- 
--FAB_CLK_DIV1   = 0x1
--FAB_CLK_DIV2   = 0x2
--FAB_CLK_DIV4   = 0x3
--FAB_CLK_DIV8   = 0x4
--FAB_CLK_DIV16  = 0x5
-+FAB_CLK_DIV1 = 0x1
-+FAB_CLK_DIV2 = 0x2
-+FAB_CLK_DIV4 = 0x3
-+FAB_CLK_DIV8 = 0x4
-+FAB_CLK_DIV16 = 0x5
- 
- THRESHOLD_CLRMD_MANUAL_CLR = 0x1
--THRESHOLD_CLRMD_AUTO_CLR   = 0x2
--TRSHD_OFF                  = 0x0
--TRSHD_STICKY_OVER          = 0x1
--TRSHD_STICKY_UNDER         = 0x2
--TRSHD_HYSTERISIS           = 0x3
--
--
--
-+THRESHOLD_CLRMD_AUTO_CLR = 0x2
-+TRSHD_OFF = 0x0
-+TRSHD_STICKY_OVER = 0x1
-+TRSHD_STICKY_UNDER = 0x2
-+TRSHD_HYSTERISIS = 0x3
-diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xrfdc/package a/sdbuild/packages/xrfdc/package b/sdbuild/packages/xrfdc/package
---- a/sdbuild/packages/xrfdc/package
-+++ b/sdbuild/packages/xrfdc/package
+diff --git a/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c b/../PYNQ/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c
+index ef80b9ff..c72ba5e8 100644
+--- a/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c
++++ b/../PYNQ/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c
 @@ -1,5 +1,6 @@
  /******************************************************************************
 -* Copyright (C) 2021 Xilinx, Inc.  All rights reserved.
@@ -990,7 +996,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  * SPDX-License-Identifier: MIT
  ******************************************************************************/
  
-@@ -52,33 +53,80 @@
+@@ -52,33 +53,80 @@ typedef struct {
  * ClkIntraTile Settings.
  */
  typedef struct {
@@ -1086,7 +1092,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  
  /**
   * ADC Signal Detect Settings.
-@@ -88,12 +136,9 @@
+@@ -88,12 +136,9 @@ typedef struct {
  	u8 TimeConstant;
  	u8 Flush;
  	u8 EnableIntegrator;
@@ -1102,7 +1108,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  	u8 HysteresisEnable;
  } XRFdc_Signal_Detector_Settings;
  /**
-@@ -234,6 +279,7 @@
+@@ -234,6 +279,7 @@ typedef struct {
  	u32 FifoEnable;
  	u32 AdderEnable;
  	u32 MixerType;
@@ -1110,7 +1116,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  } XRFdc_DACBlock_DigitalDataPath_Config;
  
  /**
-@@ -245,7 +291,7 @@
+@@ -245,7 +291,7 @@ typedef struct {
  } XRFdc_ADCBlock_AnalogDataPath_Config;
  
  /**
@@ -1119,7 +1125,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
   */
  typedef struct {
  	u32 MixerInputDataType;
-@@ -253,6 +299,7 @@
+@@ -253,6 +299,7 @@ typedef struct {
  	u32 DecimationMode;
  	u32 FifoEnable;
  	u32 MixerType;
@@ -1127,7 +1133,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  } XRFdc_ADCBlock_DigitalDataPath_Config;
  
  /**
-@@ -270,6 +317,7 @@
+@@ -270,6 +317,7 @@ typedef struct {
  	u32 MultibandConfig;
  	double MaxSampleRate;
  	u32 NumSlices;
@@ -1135,7 +1141,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  	XRFdc_DACBlock_AnalogDataPath_Config DACBlock_Analog_Config[4];
  	XRFdc_DACBlock_DigitalDataPath_Config DACBlock_Digital_Config[4];
  } XRFdc_DACTile_Config;
-@@ -411,7 +459,6 @@
+@@ -411,7 +459,6 @@ typedef struct {
  	u8 UpdateMixerScale; /* Set to 1, if user overwrite mixer scale */
  } XRFdc;
  
@@ -1143,7 +1149,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  /***************** Macros (Inline Functions) Definitions *********************/
  #define XRFDC_ADC_TILE 0U
  #define XRFDC_DAC_TILE 1U
-@@ -423,6 +470,8 @@
+@@ -423,6 +470,8 @@ u32 XRFdc_CfgInitialize(XRFdc *InstancePtr, XRFdc_Config *ConfigPtr);
  u32 XRFdc_StartUp(XRFdc *InstancePtr, u32 Type, int Tile_Id);
  u32 XRFdc_Shutdown(XRFdc *InstancePtr, u32 Type, int Tile_Id);
  u32 XRFdc_Reset(XRFdc *InstancePtr, u32 Type, int Tile_Id);
@@ -1152,7 +1158,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  u32 XRFdc_GetIPStatus(XRFdc *InstancePtr, XRFdc_IPStatus *IPStatusPtr);
  u32 XRFdc_GetBlockStatus(XRFdc *InstancePtr, u32 Type, u32 Tile_Id, u32 Block_Id, XRFdc_BlockStatus *BlockStatusPtr);
  u32 XRFdc_SetMixerSettings(XRFdc *InstancePtr, u32 Type, u32 Tile_Id, u32 Block_Id,
-@@ -490,12 +539,14 @@
+@@ -490,12 +539,14 @@ u32 XRFdc_DynamicPLLConfig(XRFdc *InstancePtr, u32 Type, u32 Tile_Id, u8 Source,
  			   double SamplingRate);
  u32 XRFdc_SetInvSincFIR(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, u16 Mode);
  u32 XRFdc_GetInvSincFIR(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, u16 *ModePtr);
@@ -1168,7 +1174,7 @@ diff -ruN --label a/sdbuild/packages/xrfdc/package --label b/sdbuild/packages/xr
  u32 XRFdc_SetDataPathMode(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, u32 Mode);
  u32 XRFdc_GetDataPathMode(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, u32 *ModePtr);
  u32 XRFdc_SetIMRPassMode(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, u32 Mode);
-@@ -517,4 +568,43 @@
+@@ -517,4 +568,43 @@ u32 XRFdc_GetDSA(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, XRFdc_DSA_Settin
  u32 XRFdc_SetPwrMode(XRFdc *InstancePtr, u32 Type, u32 Tile_Id, u32 Block_Id, XRFdc_Pwr_Mode_Settings *SettingsPtr);
  u32 XRFdc_GetPwrMode(XRFdc *InstancePtr, u32 Type, u32 Tile_Id, u32 Block_Id, XRFdc_Pwr_Mode_Settings *SettingsPtr);
  u32 XRFdc_ResetInternalFIFOWidth(XRFdc *InstancePtr, u32 Type, u32 Tile_Id, u32 Block_Id);
