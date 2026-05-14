@@ -236,6 +236,19 @@ index 620fff6..32b941e 100644
 +    ],
  )
 -
+diff --git a/sdbuild/packages/xrfdc/package/src/xil_stubs.c b/sdbuild/packages/xrfdc/package/src/xil_stubs.c
+index 4ae019b..80b3898 100644
+--- a/sdbuild/packages/xrfdc/package/src/xil_stubs.c
++++ b/sdbuild/packages/xrfdc/package/src/xil_stubs.c
+@@ -18,3 +18,8 @@ void Xil_Assert(const char* file, int line) {
+ 	printf("Assertion failed at %s:%d\n", file, line);
+ 	exit(1);
+ }
++
++unsigned int XGetCoreId(void)
++{
++    return 0;
++}
 diff --git a/sdbuild/packages/xrfdc/package/src/xparameters.h b/sdbuild/packages/xrfdc/package/src/xparameters.h
 index ac95704..d945e48 100644
 --- a/sdbuild/packages/xrfdc/package/src/xparameters.h
