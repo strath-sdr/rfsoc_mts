@@ -5,19 +5,12 @@ cd PYNQ
 # Apply changes to xrfdc and reinstall the package
 echo "Applying xrfdc MTS patch & reinstalling the package"
 #git apply ../boards/patches/xrfdc_mts.patch
-git apply ../boards/patches/xrfdc_mts3.patch
+git apply ../boards/patches/xrfdc_mts2.patch
 
 pushd sdbuild/packages/xrfdc
 . pre.sh
 . qemu.sh
 popd
-
-#pushd sdbuild/packages/xrfdc
-#rm -rf /root/xrfdc_build
-#rm -rf package/embeddedsw/ThirdParty/sw_services/libmetal/src/libmetal/build-libmetal
-#. pre.sh
-#. qemu.sh
-#popd
 
 # Move required LMK/LMX driver files into xrfclk and reinstall the package
 echo "Copying LMK/LMX files into xrfclk and reinstalling the package"
@@ -31,6 +24,7 @@ popd
 # Install rfsoc_mts package and notebook
 echo "Installing rfsoc_mts package"
 cd ..
+export BOARD
 python3 -m pip install . --no-build-isolation
 
 echo "The MTS demonstration is now installed!"
