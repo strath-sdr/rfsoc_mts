@@ -6,8 +6,7 @@ cd PYNQ
 
 # Apply changes to xrfdc and reinstall the package
 echo "Applying xrfdc MTS patch & reinstalling the package"
-#git apply ../boards/patches/xrfdc_mts.patch
-git apply ../boards/patches/xrfdc_mts2.patch
+git apply ../boards/patches/xrfdc_mts_v2024.patch
 
 pushd sdbuild/packages/xrfdc
 . pre.sh
