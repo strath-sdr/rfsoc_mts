@@ -1,5 +1,5 @@
 diff --git a/sdbuild/packages/xrfdc/package/Makefile b/sdbuild/packages/xrfdc/package/Makefile
-index 7ed01ae6..280b6db7 100644
+index 7ed01ae..a6e30cf 100644
 --- a/sdbuild/packages/xrfdc/package/Makefile
 +++ b/sdbuild/packages/xrfdc/package/Makefile
 @@ -5,7 +5,7 @@ EMBEDDEDSW_DIR ?= embeddedsw
@@ -11,8 +11,20 @@ index 7ed01ae6..280b6db7 100644
  LIB_METAL_DIR := $(EMBEDDEDSW_DIR)/ThirdParty/sw_services/libmetal/src/libmetal
  LIB_METAL_INC := $(LIB_METAL_DIR)/build-libmetal/lib/include
  ESW_SRC := $(filter-out %_g.c, $(foreach lib, $(ESW_LIBS), $(wildcard $(EMBEDDEDSW_DIR)/XilinxProcessorIPLib/drivers/$(lib)/src/*.c)))
+@@ -20,8 +20,9 @@ LOCAL_SRC := $(wildcard src/*.c)
+ all: $(LIBRARY)
+ 
+ $(LIBRARY): $(EMBEDDEDSW_DIR) $(LIB_METAL_INC)
+-	gcc -o $(LIBRARY) -shared -fPIC $(ESW_INC) \
+-		-Isrc $(ESW_SRC) $(LOCAL_SRC) $(OS_INC) -D__BAREMETAL__ -ggdb
++	gcc -o $(LIBRARY) -shared -fPIC \
++        -Isrc $(ESW_INC) $(ESW_SRC) $(LOCAL_SRC) $(OS_INC) \
++        -D__BAREMETAL__ -include src/xparameters.h -ggdb
+ 
+ install:
+ 	cp $(LIBRARY) $(PACKAGE)/
 diff --git a/sdbuild/packages/xrfdc/package/README.md b/sdbuild/packages/xrfdc/package/README.md
-index 6424fd1f..cd059ca5 100644
+index 6424fd1..cd059ca 100644
 --- a/sdbuild/packages/xrfdc/package/README.md
 +++ b/sdbuild/packages/xrfdc/package/README.md
 @@ -4,140 +4,35 @@ This is a package implementing the drivers for RF data converter IP.
@@ -182,7 +194,7 @@ index 6424fd1f..cd059ca5 100644
  Copyright (C) 2021 Xilinx, Inc
  
 diff --git a/sdbuild/packages/xrfdc/package/setup.py b/sdbuild/packages/xrfdc/package/setup.py
-index 620fff69..32b941e3 100644
+index 620fff6..32b941e 100644
 --- a/sdbuild/packages/xrfdc/package/setup.py
 +++ b/sdbuild/packages/xrfdc/package/setup.py
 @@ -4,28 +4,24 @@
@@ -224,8 +236,35 @@ index 620fff69..32b941e3 100644
 +    ],
  )
 -
+diff --git a/sdbuild/packages/xrfdc/package/src/xil_stubs.c b/sdbuild/packages/xrfdc/package/src/xil_stubs.c
+index 4ae019b..80b3898 100644
+--- a/sdbuild/packages/xrfdc/package/src/xil_stubs.c
++++ b/sdbuild/packages/xrfdc/package/src/xil_stubs.c
+@@ -18,3 +18,8 @@ void Xil_Assert(const char* file, int line) {
+ 	printf("Assertion failed at %s:%d\n", file, line);
+ 	exit(1);
+ }
++
++unsigned int XGetCoreId(void)
++{
++    return 0;
++}
+diff --git a/sdbuild/packages/xrfdc/package/src/xparameters.h b/sdbuild/packages/xrfdc/package/src/xparameters.h
+index ac95704..d945e48 100644
+--- a/sdbuild/packages/xrfdc/package/src/xparameters.h
++++ b/sdbuild/packages/xrfdc/package/src/xparameters.h
+@@ -7,5 +7,8 @@
+ #define XPAR_XSCUGIC_NUM_INSTANCES 0
+ #define XPAR_CPU_ID 0
+ 
++#define XPAR_SCUGIC_0_DIST_BASEADDR 0xF9010000U
++#define XPAR_SCUGIC_0_CPU_BASEADDR  0xF9020000U
++
+ /* Xilinx RFdc Device Name */
+ #define XPAR_XRFDC_0_DEV_NAME "a0000000.usp_rf_data_converter"
+\ No newline at end of file
 diff --git a/sdbuild/packages/xrfdc/package/xrfdc/__init__.py b/sdbuild/packages/xrfdc/package/xrfdc/__init__.py
-index edddc3e2..82ad8316 100644
+index edddc3e..2e05c59 100644
 --- a/sdbuild/packages/xrfdc/package/xrfdc/__init__.py
 +++ b/sdbuild/packages/xrfdc/package/xrfdc/__init__.py
 @@ -1,31 +1,30 @@
@@ -679,20 +718,20 @@ index edddc3e2..82ad8316 100644
 -    setattr(RFdcBlock, name, _create_c_property(name, typename, readonly))
 +    def adc_mts_sync(self):
 +        _safe_wrapper("XRFdc_MultiConverter_Sync", self._instance, ADC_TILE, self.adc_mts_config)
++
++    def dac_mts_sync(self):
++        _safe_wrapper("XRFdc_MultiConverter_Sync", self._instance, DAC_TILE, self.dac_mts_config)
  
 -for (name, typename, readonly, writeonly, implicit_read, implicit_write) in _adc_props:
 -    setattr(RFdcAdcBlock, name, _create_c_property(name, typename, readonly, writeonly,
 -        implicit_read, implicit_write))
-+    def dac_mts_sync(self):
-+        _safe_wrapper("XRFdc_MultiConverter_Sync", self._instance, DAC_TILE, self.dac_mts_config)
++    def mts_sysref_enable(self, SysRefEnable=True):
++        en = 1 if SysRefEnable else 0
++        _safe_wrapper("XRFdc_MTS_Sysref_Config", self._instance, self.dac_mts_config, self.adc_mts_config, en)
  
 -for (name, typename, readonly, writeonly, implicit_read, implicit_write) in _dac_props:
 -    setattr(RFdcDacBlock, name, _create_c_property(name, typename, readonly, writeonly,
 -        implicit_read, implicit_write))
-+    def mts_sysref_enable(self, SysRefEnable=True):
-+        en = 1 if SysRefEnable else 0
-+        _safe_wrapper("XRFdc_MTS_Sysref_Config", self._instance, self.dac_mts_config, self.adc_mts_config, en)
-+
 +# Finally we can add our data-driven properties to each class in the hierarchy
 +for name, typename, readonly in _block_props:
 +    setattr(RFdcBlock, name, _create_c_property(name, typename, readonly))
@@ -801,7 +840,7 @@ index edddc3e2..82ad8316 100644
 +TRSHD_STICKY_UNDER = 0x2
 +TRSHD_HYSTERISIS = 0x3
 diff --git a/sdbuild/packages/xrfdc/package/xrfdc/config.py b/sdbuild/packages/xrfdc/package/xrfdc/config.py
-index 3f2f4b46..de31b756 100644
+index 3f2f4b4..de31b75 100644
 --- a/sdbuild/packages/xrfdc/package/xrfdc/config.py
 +++ b/sdbuild/packages/xrfdc/package/xrfdc/config.py
 @@ -2,82 +2,78 @@
@@ -959,7 +998,7 @@ index 3f2f4b46..de31b756 100644
 +                obj.ADCTile_Config[i].ADCBlock_Digital_Config[j], params, _ADC_DDP, i, j
 +            )
 diff --git a/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c b/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c
-index ef80b9ff..c72ba5e8 100644
+index ef80b9f..c72ba5e 100644
 --- a/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c
 +++ b/sdbuild/packages/xrfdc/package/xrfdc/xrfdc_functions.c
 @@ -1,5 +1,6 @@
@@ -1196,7 +1235,7 @@ index ef80b9ff..c72ba5e8 100644
 +u8 XRFdc_GetTileLayout(XRFdc *InstancePtr);
 \ No newline at end of file
 diff --git a/sdbuild/packages/xrfdc/qemu.sh b/sdbuild/packages/xrfdc/qemu.sh
-index bbb35c29..a6fa79aa 100755
+index bbb35c2..a6fa79a 100755
 --- a/sdbuild/packages/xrfdc/qemu.sh
 +++ b/sdbuild/packages/xrfdc/qemu.sh
 @@ -9,7 +9,6 @@ set -e
