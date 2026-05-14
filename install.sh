@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Clone the PYNQ 3.1.1 image
 git clone --branch image_v3.1.1 https://github.com/Xilinx/PYNQ.git
 cd PYNQ
@@ -24,7 +26,6 @@ popd
 # Install rfsoc_mts package and notebook
 echo "Installing rfsoc_mts package"
 cd ..
-export BOARD
 python3 -m pip install . --no-build-isolation
 
 echo "The MTS demonstration is now installed!"
