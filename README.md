@@ -45,7 +45,7 @@
  mv /home/xilinx/jupyter_notebooks/rfsoc-mts-main.zip /
  unzip rfsoc-mts-main.zip
  cd /rfsoc-mts-main
- ./install.sh
+ bash install.sh
  ```
  
 Otherwise, your board has access to WiFi, and you can instead run the following command in the terminal.
@@ -53,7 +53,7 @@ Otherwise, your board has access to WiFi, and you can instead run the following 
  ```sh
  pip3 install git+https://github.com/strath-sdr/rfsoc-mts
  cd /rfsoc-mts
- ./install.sh
+ bash install.sh
  ```
  
  Once installation has complete you will find the Multi-Tile Synchronisation notebooks in the Jupyter workspace directory. The folder will be named 'rfsoc-mts'.
