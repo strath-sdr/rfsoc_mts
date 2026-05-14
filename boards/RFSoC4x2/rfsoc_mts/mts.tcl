@@ -737,12 +737,12 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   # Create instance: adc_d
   create_hier_cell_adc_d $hier_obj adc_d
 
-  # Create instance: gpio_trigger, and set properties
-  set gpio_trigger [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 gpio_trigger ]
+  # Create instance: signal_capture_trigger, and set properties
+  set signal_capture_trigger [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 signal_capture_trigger ]
   set_property -dict [list \
     CONFIG.C_ALL_OUTPUTS {1} \
     CONFIG.C_GPIO_WIDTH {1} \
-  ] $gpio_trigger
+  ] $signal_capture_trigger
 
 
   # Create interface connections
@@ -755,7 +755,7 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   connect_bd_intf_net -intf_net S_AXI_2 [get_bd_intf_pins adc_c/S_AXI] [get_bd_intf_pins smartconnect/M01_AXI]
   connect_bd_intf_net -intf_net S_AXI_3 [get_bd_intf_pins adc_d/S_AXI] [get_bd_intf_pins smartconnect/M00_AXI]
   connect_bd_intf_net -intf_net smartconnect_M02_AXI [get_bd_intf_pins smartconnect/M02_AXI] [get_bd_intf_pins adc_b/S_AXI]
-  connect_bd_intf_net -intf_net smartconnect_M04_AXI [get_bd_intf_pins smartconnect/M04_AXI] [get_bd_intf_pins gpio_trigger/S_AXI]
+  connect_bd_intf_net -intf_net smartconnect_M04_AXI [get_bd_intf_pins smartconnect/M04_AXI] [get_bd_intf_pins signal_capture_trigger/S_AXI]
 
   # Create port connections
   connect_bd_net -net aresetn_1  [get_bd_pins s_axis_aresetn] \
@@ -769,20 +769,20 @@ proc create_hier_cell_signal_capture { parentCell nameHier } {
   [get_bd_pins adc_d/m_axis_aclk] \
   [get_bd_pins adc_c/m_axis_aclk] \
   [get_bd_pins smartconnect/aclk] \
-  [get_bd_pins gpio_trigger/s_axi_aclk]
+  [get_bd_pins signal_capture_trigger/s_axi_aclk]
   connect_bd_net -net s_axi_aresetn_1  [get_bd_pins m_axis_aresetn] \
   [get_bd_pins adc_b/m_axis_aresetn] \
   [get_bd_pins adc_c/m_axis_aresetn] \
   [get_bd_pins adc_d/m_axis_aresetn] \
   [get_bd_pins adc_a/m_axis_aresetn] \
   [get_bd_pins smartconnect/aresetn] \
-  [get_bd_pins gpio_trigger/s_axi_aresetn]
+  [get_bd_pins signal_capture_trigger/s_axi_aresetn]
   connect_bd_net -net s_axis_aclk_1  [get_bd_pins s_axis_aclk] \
   [get_bd_pins adc_b/s_axis_aclk] \
   [get_bd_pins adc_d/s_axis_aclk] \
   [get_bd_pins adc_a/s_axis_aclk] \
   [get_bd_pins adc_c/s_axis_aclk]
-  connect_bd_net -net trig_cap_1  [get_bd_pins gpio_trigger/gpio_io_o] \
+  connect_bd_net -net trig_cap_1  [get_bd_pins signal_capture_trigger/gpio_io_o] \
   [get_bd_pins adc_b/trigger] \
   [get_bd_pins adc_c/trigger] \
   [get_bd_pins adc_d/trigger] \
@@ -1033,7 +1033,7 @@ proc create_hier_cell_sysref_capture { parentCell nameHier } {
     CONFIG.CLKOUT2_JITTER {78.335} \
     CONFIG.CLKOUT2_MATCHED_ROUTING {false} \
     CONFIG.CLKOUT2_PHASE_ERROR {66.020} \
-    CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {250.0} \
+    CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {100.000} \
     CONFIG.CLKOUT2_USED {false} \
     CONFIG.CLKOUT3_DRIVES {Buffer} \
     CONFIG.CLKOUT4_DRIVES {Buffer} \
@@ -2440,7 +2440,7 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
     CONFIG.CLKOUT2_JITTER {78.335} \
     CONFIG.CLKOUT2_MATCHED_ROUTING {false} \
     CONFIG.CLKOUT2_PHASE_ERROR {66.020} \
-    CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {250.0} \
+    CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {100.000} \
     CONFIG.CLKOUT2_USED {false} \
     CONFIG.CLKOUT3_DRIVES {Buffer} \
     CONFIG.CLKOUT4_DRIVES {Buffer} \
@@ -2592,14 +2592,13 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
   assign_bd_address -offset 0xB000C000 -range 0x00004000 -with_name SEG_bram_ctrl_Mem0_3 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/adc_d/bram_ctrl/S_AXI/Mem0] -force
   assign_bd_address -offset 0xB0014000 -range 0x00004000 -with_name SEG_bram_ctrl_Mem0_5 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_player/bram_ctrl/S_AXI/Mem0] -force
   assign_bd_address -offset 0xB0030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_player/gpio_enable/S_AXI/Reg] -force
-  assign_bd_address -offset 0xB0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/gpio_trigger/S_AXI/Reg] -force
+  assign_bd_address -offset 0xB0020000 -range 0x00010000 -with_name SEG_gpio_trigger_Reg -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs signal_capture/signal_capture_trigger/S_AXI/Reg] -force
   assign_bd_address -offset 0xA0040000 -range 0x00040000 -with_name SEG_rfdc1_Reg -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs rfdc/s_axi/Reg] -force
 
 
   # Restore current instance
   current_bd_instance $oldCurInst
 
-  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -2611,4 +2610,6 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
 
 create_root_design ""
 
+
+common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
 
