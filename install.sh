@@ -1,24 +1,32 @@
-# -------------------------------------------------------------------------------------------------
-# Copyright (C) 2023 Advanced Micro Devices, Inc
-# SPDX-License-Identifier: MIT
-# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- --
 #!/bin/bash
 
-# Build MTS necessary patch to xrfdc package
-echo "Cloning the PYNQ repository"
-git clone https://github.com/xilinx/PYNQ
+# Clone the PYNQ 3.1.1 image
+git clone --branch image_v3.1.1 https://github.com/Xilinx/PYNQ.git
 cd PYNQ
 
-git apply ../boards/patches/xrfdc_mts.patch
+# Apply changes to xrfdc and reinstall the package
+echo "Applying xrfdc MTS patch & reinstalling the package"
+git apply ../boards/patches/xrfdc_mts_v2024.patch
 
 pushd sdbuild/packages/xrfdc
 . pre.sh
 . qemu.sh
 popd
-cd ..
+export BOARD="$(tr -d '\0' < /proc/device-tree/chosen/pynq_board)" # Source the board again
 
-# Install python package and notebook
+# Move required LMK/LMX driver files into xrfclk and reinstall the package
+echo "Copying LMK/LMX files into xrfclk and reinstalling the package"
+sudo cp -r ../boards/$BOARD/rfsoc_mts/xrfclk/. ./sdbuild/packages/xrfclk/package/xrfclk/
+
+pushd sdbuild/packages/xrfclk
+. pre.sh
+. qemu.sh
+popd
+export BOARD="$(tr -d '\0' < /proc/device-tree/chosen/pynq_board)" # Source the board again
+
+# Install rfsoc_mts package and notebook
+echo "Installing rfsoc_mts package"
+cd ..
 python3 -m pip install . --no-build-isolation
-pynq-get-notebooks RFSoC-MTS -p $PYNQ_JUPYTER_NOTEBOOKS
-sudo cp -r ./rfsoc_mts/rfsoc_mts/xrfclk/* /usr/local/share/pynq-venv/lib/python3.10/site-packages/xrfclk/
-echo "$BOARD Ready..."
+
+echo "The MTS demonstration is now installed!"

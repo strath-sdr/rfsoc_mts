@@ -4,8 +4,8 @@ __support__ = "https://github.com/strath-sdr/rfsoc-mts"
 
 import pynq
 from pynq import Overlay, PL
-from rfsoc_mts.hierarchies import SignalPlayer, SignalCapture
-from rfsoc_mts.mts import MultiTileSynchronisation
+from .hierarchies import SignalPlayer, SignalCapture
+from .mts import MultiTileSynchronisation
 import xrfclk
 import xrfdc
 import numpy as np
@@ -13,26 +13,6 @@ import matplotlib.pyplot as plt
 import os
 
 SAMPLE_FREQ = 4000
-
-DAC_REFERENCE_TILE = 2 # DAC Tile 230
-ADC_REFERENCE_TILE = 2 # ADC Tile 226
-
-RFSOC4X2_LMK_FREQ = 500.0
-RFSOC4X2_LMX_FREQ = 500.0
-RFSOC4X2_DAC_TILES = 0b0101
-RFSOC4X2_ADC_TILES = 0b0101
-
-ZCU208_LMK_FREQ = 500.0
-ZCU208_LMX_FREQ = 4000.0
-ZCU208_DAC_TILES = 0b0011
-ZCU208_ADC_TILES = 0b0011
-
-ADC_MAP = {
-    "ADC_A": 0,
-    "ADC_B": 1,
-    "ADC_C": 2,
-    "ADC_D": 3,
-}
 
 class Overlay(Overlay):
     """
@@ -42,28 +22,32 @@ class Overlay(Overlay):
     digital feature synchronization. This is a key aspect of MTS when the data converters
     are operating in non-bypass mode.
     """
-    def __init__(self, bitfile_name=None, sync_on_init=True, **kwargs):
+    def __init__(self,
+                 lmx_freq,
+                 lmk_freq,
+                 dac_mts_reftile,
+                 adc_mts_reftile,
+                 dac_mts_tiles,
+                 adc_mts_tiles,
+                 bitfile_name=None,
+                 sync_on_init=True,
+                 **kwargs):
         
         # -- Identify board and set constants --
         board = os.getenv('BOARD')
         
-        if board == 'RFSoC4x2':
-            lmk_freq = RFSOC4X2_LMK_FREQ
-            lmx_freq = RFSOC4X2_LMX_FREQ
-            active_dac_tiles = RFSOC4X2_DAC_TILES
-            active_adc_tiles = RFSOC4X2_ADC_TILES
-        elif board == 'ZCU208':
-            lmk_freq = ZCU208_LMK_FREQ
-            lmx_freq = ZCU208_LMX_FREQ
-            active_dac_tiles = ZCU208_DAC_TILES
-            active_adc_tiles = ZCU208_ADC_TILES
-        else:
-            assert false, f"This board ({board}) is NOT supported"
+        if board not in ['RFSoC4x2', 'ZCU208']:
+            assert False, f"This board ({board}) is NOT supported"
             
         # -- Generate default bitfile name --
         if bitfile_name is None:
             this_dir = os.path.dirname(__file__)
-            bitfile_name = os.path.join(this_dir, 'rfsoc_mts', 'bitstream', 'mts.xsa')
+            bitfile_name = os.path.join(this_dir, 'bitstream', 'mts.xsa')
+
+            if not os.path.isfile(bitfile_name):
+                raise ValueError("Please provide a valid .xsa file for the hardware overlay.")
+            
+            
 
         # -- Load bitstream/xsa --
         PL.reset()
@@ -75,16 +59,16 @@ class Overlay(Overlay):
             lmx_freq = lmx_freq
         )
         
-        self.rfdc.dac_tiles[DAC_REFERENCE_TILE].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
-        self.rfdc.adc_tiles[ADC_REFERENCE_TILE].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
+        self.rfdc.dac_tiles[dac_mts_reftile].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
+        self.rfdc.adc_tiles[adc_mts_reftile].DynamicPLLConfig(1, lmx_freq, SAMPLE_FREQ)
         
         self.mts = MultiTileSynchronisation(
             rfdc = self.rfdc,
             clkwiz = self.sysref_capture.clkwiz,
-            dac_active = active_dac_tiles,
-            adc_active = active_adc_tiles,
-            dac_reftile = DAC_REFERENCE_TILE,
-            adc_reftile = ADC_REFERENCE_TILE,
+            dac_active = dac_mts_tiles,
+            adc_active = adc_mts_tiles,
+            dac_reftile = dac_mts_reftile,
+            adc_reftile = adc_mts_reftile,
             DigitalFeatureSynch=True,
             sync_on_init=sync_on_init,
         )
@@ -127,47 +111,61 @@ class Overlay(Overlay):
                 }
                 block.UpdateEvent(xrfdc.EVENT_MIXER)
                 tile.SetupFIFO(True)
+        
+    def plot_adc(self, sample_matrix, window, title="Signal Comparison"):
 
-                
-                
-                
+        adc_names = [name.capitalize() for name in self.signal_capture.bram_hierarchies]
 
-def plot_adc(sample_matrix, adc_names, window, title="Signal Comparison"):
-    if len(adc_names) == 0:
-        raise ValueError("adc_names must contain at least one ADC")
+        signals = sample_matrix[:, 0:window]
+        x = np.arange(window)
 
-    # -- Extract signals --
-    signals = []
-    for adc in adc_names:
-        if adc not in ADC_MAP:
-            raise ValueError(f"Unknown ADC name: {adc}")
-        idx = ADC_MAP[adc]
-        signals.append(sample_matrix[idx][0:window-1])
+        fig, axes = plt.subplots(2, 1, sharex=True, figsize=(12, 6))
 
-    x = np.arange(len(signals[0]))
+        colours = [
+            'tab:blue',
+            'tab:orange',
+            'tab:green',
+            'tab:red',
+            'tab:purple',
+            'tab:pink',
+            'tab:olive',
+            'tab:cyan'
+        ]
+        
+        markers = ['o', 'x', 's', '^', 'd', '*', 'v', 'P']
 
-    fig, axes = plt.subplots(2, 1, sharex=True, figsize=(12, 6))
-    
-    styles = ['m-^', '-o', 'r-x', 'g-s', 'c-d', 'k-*']
+        # -- Real part --
+        for i, sig in enumerate(signals):
+            axes[0].plot(
+                x,
+                sig.real,
+                color=colours[i % len(colours)],
+                linestyle='-',
+                marker=markers[i % len(markers)],
+                markersize=4,
+                label=adc_names[i]
+            )
 
-    # -- Real part --
-    for i, sig in enumerate(signals):
-        style = styles[i % len(styles)]
-        axes[0].plot(x, sig.real, style, markersize=3, label=adc_names[i])
+        axes[0].set_title(f"Real ({title})")
+        axes[0].set_ylabel("Amplitude")
+        axes[0].legend()
 
-    axes[0].set_title(f"Real ({title})")
-    axes[0].set_ylabel("Amplitude")
-    axes[0].legend()
+        # -- Imaginary part --
+        for i, sig in enumerate(signals):
+            axes[1].plot(
+                x,
+                sig.imag,
+                color=colours[i % len(colours)],
+                linestyle='-',
+                marker=markers[i % len(markers)],
+                markersize=4,
+                label=adc_names[i]
+            )
 
-    # -- Imag part --
-    for i, sig in enumerate(signals):
-        style = styles[i % len(styles)]
-        axes[1].plot(x, sig.imag, style, markersize=3, label=adc_names[i])
+        axes[1].set_title(f"Imag ({title})")
+        axes[1].set_xlabel("Sample Index")
+        axes[1].set_ylabel("Amplitude")
+        axes[1].legend()
 
-    axes[1].set_title(f"Imag ({title})")
-    axes[1].set_xlabel("Sample Index")
-    axes[1].set_ylabel("Amplitude")
-    axes[1].legend()
-
-    plt.tight_layout()
-    plt.show()
+        plt.tight_layout()
+        plt.show()
