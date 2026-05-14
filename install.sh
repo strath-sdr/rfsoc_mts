@@ -13,17 +13,17 @@ pushd sdbuild/packages/xrfdc
 . pre.sh
 . qemu.sh
 popd
-
-export BOARD="$(tr -d '\0' < /proc/device-tree/chosen/pynq_board)" # Re-source the board
+export BOARD="$(tr -d '\0' < /proc/device-tree/chosen/pynq_board)" # Source the board again
 
 # Move required LMK/LMX driver files into xrfclk and reinstall the package
 echo "Copying LMK/LMX files into xrfclk and reinstalling the package"
-sudo cp -r ../boards/$BOARD/rfsoc_mts/xrfclk* ./sdbuild/packages/xrfclk/package/xrfclk
+sudo cp -r ../boards/$BOARD/rfsoc_mts/xrfclk/. ./sdbuild/packages/xrfclk/package/xrfclk/
 
 pushd sdbuild/packages/xrfclk
 . pre.sh
 . qemu.sh
 popd
+export BOARD="$(tr -d '\0' < /proc/device-tree/chosen/pynq_board)" # Source the board again
 
 # Install rfsoc_mts package and notebook
 echo "Installing rfsoc_mts package"
