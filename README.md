@@ -29,13 +29,13 @@
  * We need to open a terminal in Jupyter Lab. Firstly, open a launcher window as shown in the figure below:
  
  <p align="center">
-   <img src="./open_jupyter_launcher.jpg" width="30%" height="30%" />
+   <img src="./open_jupyter_launcher.jpg" width="50%" height="50%" />
  </p>
  
  * Now open a terminal in Jupyter as illustrated below:
  
  <p align="center">
-   <img src="./open_terminal_window.jpg" width="30%" height="30%" />
+   <img src="./open_terminal_window.jpg" width="50%" height="50%" />
  </p>
  
  Run the code below in the jupyter terminal to install the Spectrum Analyser.
