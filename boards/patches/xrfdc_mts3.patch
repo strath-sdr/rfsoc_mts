@@ -1233,16 +1233,3 @@ index ef80b9f..c72ba5e 100644
 +u32 XRFdc_SetDACDataScaler(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, u32 Enable);
 +u32 XRFdc_GetDACDataScaler(XRFdc *InstancePtr, u32 Tile_Id, u32 Block_Id, u32 *EnablePtr);
 +u8 XRFdc_GetTileLayout(XRFdc *InstancePtr);
-\ No newline at end of file
-diff --git a/sdbuild/packages/xrfdc/qemu.sh b/sdbuild/packages/xrfdc/qemu.sh
-index bbb35c2..a6fa79a 100755
---- a/sdbuild/packages/xrfdc/qemu.sh
-+++ b/sdbuild/packages/xrfdc/qemu.sh
-@@ -9,7 +9,6 @@ set -e
- for f in /etc/profile.d/*.sh; do source $f; done
- 
- export HOME=/root
--export BOARD=${PYNQ_BOARD}
- 
- cd /root/xrfdc_build
- 
