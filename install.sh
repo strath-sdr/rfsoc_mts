@@ -14,7 +14,7 @@ pushd sdbuild/packages/xrfdc
 . qemu.sh
 popd
 
-export BOARD=echo "$(tr -d '\0' < /proc/device-tree/chosen/pynq_board)" # Re-source the board
+export BOARD="$(tr -d '\0' < /proc/device-tree/chosen/pynq_board)" # Re-source the board
 
 # Move required LMK/LMX driver files into xrfclk and reinstall the package
 echo "Copying LMK/LMX files into xrfclk and reinstalling the package"
