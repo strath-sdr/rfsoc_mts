@@ -22,12 +22,15 @@ class SignalPlayer(DefaultHierarchy):
         self.disable()
     
     def enable(self):
+        """Enable reading from Signal Player's BRAM, thus signal generation."""
         self.gpio_enable.channel1[0].on()
         
     def disable(self):
+        """Disable reading from Signal Player's BRAM, thus signal generation."""
         self.gpio_enable.channel1[0].off()
         
     def load_signal(self, signal):
+        """Load a PS generated signal into the Signal Player's BRAM"""
         signal_array = np.zeros(self.length)
         signal_array[0::2] = signal.real
         signal_array[1::2] = signal.imag
@@ -37,9 +40,7 @@ class SignalPlayer(DefaultHierarchy):
     
     @staticmethod
     def checkhierarchy(description):
-        """
-        Check for hierarchy with bram_ctrl and gpio_enable IPs
-        """
+        """Check for hierarchy with bram_ctrl and gpio_enable IPs."""
         return description["fullpath"].split("/")[-1] == "signal_player"
     
     
@@ -67,24 +68,18 @@ class SignalCapture(DefaultHierarchy):
         self.signal_capture_trigger.channel1[0].off()
     
     def trigger(self):
+        """Invoke AXI GPIO IP core to produce rising edge and begin a BRAM Signal Capture write."""
         self.signal_capture_trigger.channel1[0].on()
         self.signal_capture_trigger.channel1[0].off()
     
     def capture_adc(self):
-        """ Captures ADC samples from three channels and stores to internal memories """
+        """Captures samples from all detected sub-hierarchies and writes them to their respective Signal Capture BRAM."""
         buffer = np.zeros(
             (self.num_channels, int(self.length/2)),
             dtype=np.complex64
         )
 
         self.trigger()
-        """
-        buffer[0] = self.chA_mmio_array[0::2] + 1j*self.chA_mmio_array[1::2]
-        buffer[1] = self.chB_mmio_array[0::2] + 1j*self.chB_mmio_array[1::2]
-        buffer[2] = -1*(self.chC_mmio_array[0::2] + 1j*self.chC_mmio_array[1::2])
-        buffer[3] = -1*(self.chD_mmio_array[0::2] + 1j*self.chD_mmio_array[1::2])
-        # correct for the RFSoC4x2 polarity swap of Tile224 ADC_D & ADC_C - tile 226 ADC_B, ADC_A are fine
-        """
         
         for channel, hier_name in enumerate(self.bram_hierarchies):
             mmio_array = self._mmio_arrays[hier_name]
@@ -95,6 +90,7 @@ class SignalCapture(DefaultHierarchy):
     
     @staticmethod
     def checkhierarchy(description):
+        """Bind to hierarchy containing 'signal_capture_trigger' IP and atleast one sub-hierarchy containing bram_ctrl"""
         # -- Identify signal_capture_trigger IP --
         if 'signal_capture_trigger' not in description.get('ip', {}):
             return False
@@ -107,8 +103,7 @@ class SignalCapture(DefaultHierarchy):
     
     @staticmethod
     def get_bram_hierarchies(description):
-        """Find hierarchies starting with "adc_" containing bram_ctrl memory.
-        """
+        """Find hierarchies starting with "adc_" containing bram_ctrl memory."""
         hierarchies = description.get('hierarchies', {})
 
         adc_with_bram = []
