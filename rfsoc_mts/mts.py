@@ -30,8 +30,8 @@ class MultiTileSynchronisation():
         self.clkwiz = clkwiz # clkwiz used in MTS PL_SYSREF capture
         self.dac_active = dac_active # bitmask describing dac tiles to synch
         self.adc_active = adc_active # bitmask describing adc tiles to synch
-        self.dac_reftile = dac_reftile # tile whose PLL drives all dac mts tiles
-        self.adc_reftile = adc_reftile # tile whose PLL drives all adc mts tiles
+        self.dac_reftile = dac_reftile # tile whose sampling clock drives all dac mts tiles
+        self.adc_reftile = adc_reftile # tile whose sampling clock drives all adc mts tiles
         self.dfs_en = DigitalFeatureSynch # Digital Feature Synchronisation enable
         self.rfdc_dict = self._discover_rfdcs(dac_active, adc_active) # Identify current board's RFDCs relative to MTS bitmasks
         
