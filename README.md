@@ -72,7 +72,7 @@ make all
 ```
 
 ## Acknowledgements
-This work was inspired by the works of [RFSoC_MTS](https://github.com/Xilinx/RFSoC-PYNQ/) by AMD.
+This work was inspired by the works of [RFSoC_MTS](https://github.com/Xilinx/RFSoC-MTS/) by AMD.
 
 ## License 
 [BSD 3-Clause](../../blob/master/LICENSE)
