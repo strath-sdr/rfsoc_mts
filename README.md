@@ -41,7 +41,7 @@ Follow the instructions below to install the Multi-Tile Synchronisation (MTS) De
 Run the code below in the jupyter terminal to install the Spectrum Analyser.
 
 > [!WARNING]
-> The commands below will alter the <i>xrfdc</i> package included with PYNQ. If you have made changes to this package, you should save them before installing this repository. By altering this package, you may alter the performance of other PYNQ designs on your device.
+> The commands below modify the `xrfdc` package included with PYNQ. If you have made local changes to this package, you should back them up before installing this repository. Additionally, because these modifications replace the default `xrfdc` package, they may affect the behaviour of other PYNQ designs on your device.
 
 ```sh
 pip3 install git+https://github.com/strath-sdr/rfsoc_mts
