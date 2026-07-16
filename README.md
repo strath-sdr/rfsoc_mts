@@ -44,12 +44,12 @@ Run the code below in the jupyter terminal to install the Spectrum Analyser.
 > The commands below will alter the <i>xrfdc</i> package included with PYNQ. If you have made changes to this package, you should save them before installing this repository. By altering this package, you may alter the performance of other PYNQ designs on your device.
 
 ```sh
-pip3 install git+https://github.com/strath-sdr/rfsoc-mts
-cd /rfsoc-mts
+pip3 install git+https://github.com/strath-sdr/rfsoc_mts
+cd /rfsoc_mts
 bash install.sh
 ```
 
-Once installation has complete you will find the Multi-Tile Synchronisation notebooks in the Jupyter workspace directory. The folder will be named 'rfsoc-mts'.
+Once installation has complete you will find the Multi-Tile Synchronisation notebooks in the Jupyter workspace directory. The folder will be named 'rfsoc_mts'.
 
 ## Using the Project Files
 The following software is required to use the project files in this repository.
