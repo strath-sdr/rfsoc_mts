@@ -51,15 +51,6 @@
  ```
  
  Once installation has complete you will find the Multi-Tile Synchronisation notebooks in the Jupyter workspace directory. The folder will be named 'rfsoc-mts'.
-
- ### For internal use
- While this repository is not publicly available, you won't be able to ```pip3 install``` the sitory. Therefore, you will need to download the repository as a zip and drag-and-drop it into the Jupyter Labs workspace directory. After doing so open the terminal and run the following commands
- ```sh
- mv /home/xilinx/jupyter_notebooks/rfsoc-mts-main.zip /
- unzip rfsoc-mts-main.zip
- cd /rfsoc-mts-main
- bash install.sh
- ```
  
  ## Using the Project Files
  The following software is required to use the project files in this repository.
