@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 import shutil
 
 board_notebooks_dir = os.environ['PYNQ_JUPYTER_NOTEBOOKS']
-board_project_dir = os.path.join(board_notebooks_dir, 'rfsoc-mts')
+board_project_dir = os.path.join(board_notebooks_dir, 'rfsoc_mts')
 
 class package_installer():
     def __init__(self,
@@ -95,6 +95,6 @@ package_installer(name = "rfsoc_mts",
                   author = "Ryan Provan",
                   email = "ryan.provan@strath.ac.uk, rjprovan2001@gmail.com",
                   license = "None",
-                  url = "https://github.com/strathsdr/rfsoc-mts",
+                  url = "https://github.com/strathsdr/rfsoc_mts",
                   pynq_version = "pynq>=3.1.1",
                   board = os.environ['BOARD'])
