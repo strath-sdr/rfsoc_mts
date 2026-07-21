@@ -7,4 +7,4 @@ bitstream:
 	vivado -mode batch -source make_bitstream.tcl -notrace
 
 clean:
-	rm -rf mts *.jou *.log NA .Xil
+	rm -rf block_design *.jou *.log NA .Xil

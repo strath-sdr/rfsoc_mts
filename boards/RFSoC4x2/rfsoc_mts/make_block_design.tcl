@@ -1,5 +1,5 @@
-set overlay_name "mts"
-set design_name "mts"
+set overlay_name "block_design"
+set design_name "rfsoc_mts"
 set iprepo_dir ./../../iprepo
 
 # Create project
