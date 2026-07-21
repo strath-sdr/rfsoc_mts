@@ -1,22 +1,38 @@
 set overlay_name "rfsoc_mts"
 set design_name "block_design"
+set xsa_name "mts"
 
-# Open project
 open_project ./${overlay_name}/${overlay_name}.xpr
-open_bd_design ./${overlay_name}/${overlay_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd
 
-# Add top wrapper and xdc files
-make_wrapper -files [get_files ./${overlay_name}/${overlay_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd] -top
-add_files -norecurse ./${overlay_name}/${overlay_name}.srcs/sources_1/bd/${design_name}/hdl/${design_name}_wrapper.vhd
+set bd_file \
+    ./${overlay_name}/${overlay_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd
+
+open_bd_design $bd_file
+
+set wrapper_file [make_wrapper -files [get_files $bd_file] -top]
+add_files -norecurse $wrapper_file
+
 set_property top ${design_name}_wrapper [current_fileset]
 update_compile_order -fileset sources_1
 
-# Make bitstream
-launch_runs impl_1 -to_step write_bitstream
+puts "Launching implementation and bitstream generation..."
+
+launch_runs impl_1 -to_step write_bitstream -jobs 6
 wait_on_run impl_1
 
-# Move and rename bitstream to final location
-file copy -force ./${overlay_name}/${overlay_name}.runs/impl_1/${design_name}_wrapper.bit ./bitstream/${overlay_name}.bit
+set status [get_property STATUS [get_runs impl_1]]
+puts "Implementation status: $status"
 
-# copy hwh files
-file copy -force ./${overlay_name}/${overlay_name}.gen/sources_1/bd/${design_name}/hw_handoff/${design_name}.hwh ./bitstream/${overlay_name}.hwh
+if {![string match "*Complete*" $status]} {
+    error "Implementation did not complete successfully: $status"
+}
+
+file mkdir ./bitstream
+
+write_hw_platform \
+    -fixed \
+    -include_bit \
+    -force \
+    -file ./bitstream/${xsa_name}.xsa
+
+puts "Generated XSA: [file normalize ./bitstream/${xsa_name}.xsa]"
