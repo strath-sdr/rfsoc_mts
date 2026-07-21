@@ -1,3 +1,7 @@
+# ----------------------------------------------
+# Copyright (C) 2023 Advanced Micro Devices, Inc
+# ----------------------------------------------
+
 # Differential sysref and clock assignments
 set_property PACKAGE_PIN AP18 [get_ports {pl_sysref_clk_p[0]}]
 set_property PACKAGE_PIN AR18 [get_ports {pl_sysref_clk_n[0]}]

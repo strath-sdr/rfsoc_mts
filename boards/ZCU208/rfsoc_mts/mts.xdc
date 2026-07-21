@@ -1,5 +1,9 @@
+# ----------------------------------------------
+# Copyright (C) 2023 Advanced Micro Devices, Inc
+# ----------------------------------------------
+
 # Differential PL_SYSREF and PL_CLK assignments
-set_property PACKAGE_PIN B10 [get_ports {pl_sysref_clk_p[0}]
+set_property PACKAGE_PIN B10 [get_ports {pl_sysref_clk_p[0]}]
 set_property PACKAGE_PIN B9 [get_ports {pl_sysref_clk_n[0]}]
 set_property IOSTANDARD LVDS_25 [get_ports {pl_sysref_clk_p[0]}]
 set_property IOSTANDARD LVDS_25 [get_ports {pl_sysref_clk_n[0]}]
