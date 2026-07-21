@@ -31,3 +31,6 @@ cd ..
 python3 -m pip install . --no-build-isolation
 
 echo "The MTS demonstration is now installed!"
+
+# Remove installation folder
+rm -rf /rfsoc_mts/
