@@ -13,12 +13,6 @@ set_property PACKAGE_PIN B7 [get_ports {pl_clk_clk_n[0]}]
 set_property IOSTANDARD LVDS_25 [get_ports {pl_clk_clk_p[0]}]
 set_property IOSTANDARD LVDS_25 [get_ports {pl_clk_clk_n[0]}]
 
-# SPI pin assignments
-set_property PACKAGE_PIN C11 [get_ports {clk104_clk_spi_mux_sel_tri_o[0]}]
-set_property PACKAGE_PIN B12 [get_ports {clk104_clk_spi_mux_sel_tri_o[1]}]
-set_property IOSTANDARD LVCMOS12 [get_ports {clk104_clk_spi_mux_sel_tri_o[0]}]
-set_property IOSTANDARD LVCMOS12 [get_ports {clk104_clk_spi_mux_sel_tri_o[1]}]
-
 # Synthesis guidance
 set_property BLOCK_SYNTH.RETIMING 1 [get_cells {rfsoc_mts_i/rfdc/*}]
 set_property BLOCK_SYNTH.STRATEGY {PERFORMANCE_OPTIMIZED} [get_cells {rfsoc_mts_i/rfdc/*}]
