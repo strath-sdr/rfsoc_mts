@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Clone the PYNQ 3.1.1 image
 git clone --branch image_v3.1.1 https://github.com/Xilinx/PYNQ.git
 cd PYNQ
