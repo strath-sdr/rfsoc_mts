@@ -1,4 +1,4 @@
-<img src="strathsdr_banner.png" width="100%">
+<img src="strathsdr_nw_banner.png" width="100%">
 
 <table border="0" align="center">
     <tr border="0">
