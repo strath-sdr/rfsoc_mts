@@ -44,8 +44,8 @@ Run the code below in the jupyter terminal to install the Spectrum Analyser.
 > The commands below modify the `xrfdc` package included with PYNQ. If you have made local changes to this package, you should back them up before installing this repository. Additionally, because these modifications replace the default `xrfdc` package, they may affect the behaviour of other PYNQ designs on your device.
 
 ```sh
-pip3 install git+https://github.com/strath-sdr/rfsoc_mts
-cd /rfsoc_mts
+git clone https://github.com/strath-sdr/rfsoc_mts
+cd rfsoc_mts
 bash install.sh
 ```
 
