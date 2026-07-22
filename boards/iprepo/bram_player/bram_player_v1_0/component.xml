@@ -520,7 +520,7 @@
       <xilinx:coreCreationDateTime>2026-02-26T16:48:12Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2024.2</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2024.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="b7afccf1"/>
       <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="1ee80dcb"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="9c8cdb7e"/>
