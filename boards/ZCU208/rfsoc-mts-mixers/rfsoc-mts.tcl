@@ -48,8 +48,10 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 # <./myproj/project_1.xpr> in the current working folder.
 
 set overlay_name rfsoc-mts
+variable design_name
+set design_name block_design
 cd [file dirname [file normalize [info script]]]
-create_project -force $overlay_name $overlay_name -part xczu48dr-fsvg1517-2-e
+create_project -force $design_name $design_name -part xczu48dr-fsvg1517-2-e
 set_property target_language VHDL [current_project]
 set_property ip_repo_paths [file normalize ../../iprepo] [current_project]
 update_ip_catalog
@@ -57,8 +59,7 @@ add_files -fileset constrs_1 -norecurse mts.xdc
 
 
 # CHANGE DESIGN NAME HERE
-variable design_name
-set design_name block_design
+
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:

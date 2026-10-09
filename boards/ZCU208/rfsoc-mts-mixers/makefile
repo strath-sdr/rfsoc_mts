@@ -7,6 +7,6 @@ build: block_design
 	vivado -mode batch -source build_bitstream.tcl -notrace
 
 clean:
-	rm -rf rfsoc-mts *.jou *.log NA .Xil .crashReporter
+	rm -rf block_design *.jou *.log NA .Xil .crashReporter *.txt
 
 .PHONY: all block_design build clean
