@@ -39,8 +39,8 @@ thumbs.db
 # Ignore Vivado Files
 *.jou
 *.str
+*.txt
 *vivado.txt
 *vivado.jou
 *vivado.log
-**/project_1/
-boards/*/rfsoc_mts/rfsoc_mts/
+**/block_design/
