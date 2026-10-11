@@ -1,8 +1,9 @@
 if {[version -short] ne "2025.2"} {error "Vivado 2025.2 required"}
 cd [file dirname [file normalize [info script]]]
 set overlay_name rfsoc-mts
-set design_name block_design
-open_project ${design_name}/${design_name}.xpr
+set project_name block_design
+set design_name rfsoc_mts
+open_project ${project_name}/${project_name}.xpr
 set bd [get_files ${design_name}.bd]
 open_bd_design $bd
 validate_bd_design

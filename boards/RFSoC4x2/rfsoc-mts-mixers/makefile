@@ -1,7 +1,9 @@
+overlay_name := rfsoc-mts
+
 all: build
 
 block_design:
-	vivado -mode batch -source rfsoc-mts.tcl -notrace
+	vivado -mode batch -source $(overlay_name).tcl -notrace
 
 build: block_design
 	vivado -mode batch -source build_bitstream.tcl -notrace

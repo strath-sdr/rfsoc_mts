@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: block_design
+# This is a generated script based on design: rfsoc_mts
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -41,25 +41,23 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source block_design_script.tcl
+# source rfsoc_mts_script.tcl
 
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
 # <./myproj/project_1.xpr> in the current working folder.
 
-set overlay_name rfsoc-mts
-variable design_name
-set design_name block_design
-cd [file dirname [file normalize [info script]]]
-create_project -force $design_name $design_name -part xczu48dr-ffvg1517-2-e
-set_property target_language VHDL [current_project]
-set_property ip_repo_paths [file normalize ../../iprepo] [current_project]
-update_ip_catalog
-add_files -fileset constrs_1 -norecurse mts.xdc
+set overlay_name block_design
+set list_projs [get_projects -quiet]
+if { $list_projs eq "" } {
+   create_project  ${overlay_name} ${overlay_name} -part xczu48dr-ffvg1517-2-e
+   set_property BOARD_PART realdigital.org:rfsoc4x2:part0:1.0 [current_project]
+}
 
 
 # CHANGE DESIGN NAME HERE
-
+variable design_name
+set design_name rfsoc_mts
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:
@@ -2616,6 +2614,3 @@ Port;FD4A0000;FD4AFFFF;1|FPD;DPDMA;FD4C0000;FD4CFFFF;1|FPD;DDR_XMPU5_CFG;FD05000
 create_root_design ""
 
 
-
-validate_bd_design
-save_bd_design
