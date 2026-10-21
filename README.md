@@ -12,7 +12,7 @@
 </table>
 
 # PYNQ Multi-Tile Sychronisation Reference Design with Synhronisation Fine Mixing Digital Features.
-This repository has been tested with [PYNQ image v3.1.1](https://github.com/Xilinx/PYNQ/releases) (Vivado 2024.1) for the following RFSoC development boards. Newer PYNQ versions may require different Vivado versions; please verify compatibility against the PYNQ release notes:
+This repository has been tested with [PYNQ image v4.0](https://github.com/Xilinx/PYNQ/releases) (Vivado 2025.2) for the following RFSoC development boards. Newer PYNQ versions may require different Vivado versions; please verify compatibility against the PYNQ release notes:
 
 [* ZCU208(https://www.xilinx.com/products/boards-and-kits/zcu208.html),]: # 
 * [RFSoC4x2](http://rfsoc-pynq.io/),
@@ -24,7 +24,7 @@ This repository has been tested with [PYNQ image v3.1.1](https://github.com/Xili
 
 ## Quick Start
 Follow the instructions below to install the Multi-Tile Synchronisation (MTS) Demonstrator now. <b>You will need to give your board access to the internet</b>.
-*  Power on your RFSoC development board with an SD Card containing a fresh PYNQ v3.0.1 image or greater.
+*  Power on your RFSoC development board with an SD Card containing a fresh PYNQ v4.0 image or greater.
 *  Navigate to Jupyter Labs by opening a browser (preferably Chrome) and connecting to `http://<board_ip_address>:9090/lab`.
 * We need to open a terminal in Jupyter Lab. Firstly, open a launcher window as shown in the figure below:
 
@@ -53,10 +53,10 @@ Once installation has complete you will find the Multi-Tile Synchronisation note
 
 ## Using the Project Files
 The following software is required to use the project files in this repository.
-- Vivado Design Suite 2024.2
+- Vivado Design Suite 2025.2
 
 ### Vivado
-This project can be built with Vivado from the command line. Open Vivado 2024.2 and execute the following into the tcl console:
+This project can be built with Vivado from the command line. Open Vivado 2025.2 and execute the following into the tcl console:
 ```sh
 cd /<repository-location>/boards/<board-name>/rfsoc_mts/
 ```
