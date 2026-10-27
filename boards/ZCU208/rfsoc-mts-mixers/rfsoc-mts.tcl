@@ -54,6 +54,9 @@ if { $list_projs eq "" } {
    set_property BOARD_PART xilinx.com:zcu208:part0:2.0 [current_project]
 }
 
+set_property ip_repo_paths [file normalize "$script_folder/../../iprepo"] [current_project]
+update_ip_catalog
+add_files -fileset constrs_1 -norecurse [file join $script_folder mts.xdc]
 
 # CHANGE DESIGN NAME HERE
 variable design_name

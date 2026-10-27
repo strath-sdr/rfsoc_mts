@@ -51,9 +51,14 @@ set overlay_name block_design
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
    create_project  ${overlay_name} ${overlay_name} -part xczu48dr-ffvg1517-2-e
-   set_property BOARD_PART realdigital.org:rfsoc4x2:part0:1.0 [current_project]
+   if {[llength [get_board_parts -quiet realdigital.org:rfsoc4x2:part0:1.0]]} {
+      set_property BOARD_PART realdigital.org:rfsoc4x2:part0:1.0 [current_project]
+   }
 }
 
+set_property ip_repo_paths [file normalize "$script_folder/../../iprepo"] [current_project]
+update_ip_catalog
+add_files -fileset constrs_1 -norecurse [file join $script_folder mts.xdc]
 
 # CHANGE DESIGN NAME HERE
 variable design_name
