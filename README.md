@@ -11,7 +11,9 @@
     </tr>
 </table>
 
-# PYNQ Multi-Tile Sychronisation Reference Design with Synhronisation Fine Mixing Digital Features.
+# PYNQ Multi-Tile Sychronisation on RFSoC.
+This repository provides reference designs to demonstrate how to synchronise the Radio Frequency Data Converters (RFDCs) of RFSoC devices using the Multi-Tile Synchronisation Engine using the PYNQ framework. The repository demonstrates systems whose RFDCs are configured to operate both (1) with digital mixing stages (Digital Feature Synchronisation), and without digital mixing stages (Bypass Mode). Adoption of the Fine Mixers requires extra syncrhonisation stages to achieve phase alignment between data converters.
+
 This repository has been tested with [PYNQ image v4.0](https://github.com/Xilinx/PYNQ/releases) (Vivado 2025.2) for the following RFSoC development boards. Newer PYNQ versions may require different Vivado versions; please verify compatibility against the PYNQ release notes:
 
 [* ZCU208(https://www.xilinx.com/products/boards-and-kits/zcu208.html),]: # 
@@ -23,7 +25,7 @@ This repository has been tested with [PYNQ image v4.0](https://github.com/Xilinx
 </p>
 
 ## Quick Start
-Follow the instructions below to install the Multi-Tile Synchronisation (MTS) Demonstrator now. <b>You will need to give your board access to the internet</b>.
+Follow the instructions below to install the Multi-Tile Synchronisation (MTS) Demonstrator now. <b>You will need to ensure that your RFSoC PYNQ board has access to the internet to install this demo</b>.
 *  Power on your RFSoC development board with an SD Card containing a fresh PYNQ v4.0 image or greater.
 *  Navigate to Jupyter Labs by opening a browser (preferably Chrome) and connecting to `http://<board_ip_address>:9090/lab`.
 * We need to open a terminal in Jupyter Lab. Firstly, open a launcher window as shown in the figure below:
@@ -38,7 +40,7 @@ Follow the instructions below to install the Multi-Tile Synchronisation (MTS) De
   <img src="./open_terminal_window.jpg" width="50%" height="50%" />
 </p>
 
-Run the code below in the jupyter terminal to install the Spectrum Analyser.
+Run the code below in the jupyter terminal to install MTS reference design.
 
 > [!WARNING]
 > The commands below modify the `xrfdc` package included with PYNQ. If you have made local changes to this package, you should back them up before installing this repository. Additionally, because these modifications replace the default `xrfdc` package, they may affect the behaviour of other PYNQ designs on your device.
