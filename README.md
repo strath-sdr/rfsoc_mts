@@ -12,7 +12,7 @@
 </table>
 
 # PYNQ Multi-Tile Sychronisation on RFSoC.
-This repository provides reference designs to demonstrate how to synchronise the Radio Frequency Data Converters (RFDCs) of RFSoC devices using the Multi-Tile Synchronisation Engine using the PYNQ framework. The repository demonstrates systems whose RFDCs are configured to operate both (1) with digital mixing stages (Digital Feature Synchronisation), and without digital mixing stages (Bypass Mode). Adoption of the Fine Mixers requires extra syncrhonisation stages to achieve phase alignment between data converters.
+This repository provides a set of Vivado reference designs and Jupyter Notebooks to demonstrate the syncrhonisation of Radio Frequency Data Converters (RFDCs) on the RFSoC device using the Multi-Tile Synchronisation engine using the PYNQ framework. The repository demonstrates designs targetted for systems whose RFDCs are configured to operate both (1) with digital mixing stages (Digital Feature Synchronisation), and without digital mixing stages (Bypass Mode). Adoption of the Fine Mixers requires extra syncrhonisation stages to achieve phase alignment between data converters.
 
 This repository has been tested with [PYNQ image v4.0](https://github.com/Xilinx/PYNQ/releases) (Vivado 2025.2) for the following RFSoC development boards. Newer PYNQ versions may require different Vivado versions; please verify compatibility against the PYNQ release notes:
 
