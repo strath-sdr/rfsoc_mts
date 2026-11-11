@@ -11,7 +11,7 @@
     </tr>
 </table>
 
-# PYNQ Multi-Tile Sychronisation Reference Design with Synhronisation Fine Mixing Digital Features.
+# PYNQ Multi-Tile Sychronisation Reference Design with Synhronisation of Fine Mixing Digital Features.
 This repository has been tested with [PYNQ image v3.1.1](https://github.com/Xilinx/PYNQ/releases) (Vivado 2024.1) for the following RFSoC development boards. Newer PYNQ versions may require different Vivado versions; please verify compatibility against the PYNQ release notes:
 
 [* ZCU208(https://www.xilinx.com/products/boards-and-kits/zcu208.html),]: # 
