@@ -80,7 +80,10 @@ class package_installer():
     def run_setup(self):
         setup(name=self.name,
               version=self.version,
-              install_requires=[self.pynq_version],
+              install_requires=[
+                  self.pynq_version,
+                  "pynqmetadata==0.1.9",
+              ],
               url=self.url,
               license=self.license,
               author=self.author,
