@@ -1,5 +1,5 @@
 # Clone the PYNQ 3.1.1 image
-git clone --branch image_v3.1.1 https://github.com/Xilinx/PYNQ.git
+git clone --branch image_v3.1.1 --recursive https://github.com/Xilinx/PYNQ.git
 cd PYNQ
 
 # Apply changes to xrfdc and reinstall the package

@@ -82,7 +82,7 @@ class package_installer():
               version=self.version,
               install_requires=[
                   self.pynq_version,
-                  "pynqmetadata==0.1.9",
+                  "pynqmetadata==0.1.8",
               ],
               url=self.url,
               license=self.license,
@@ -99,5 +99,5 @@ package_installer(name = "rfsoc_mts",
                   email = "ryan.provan@strath.ac.uk, rjprovan2001@gmail.com",
                   license = "None",
                   url = "https://github.com/strathsdr/rfsoc_mts",
-                  pynq_version = "pynq>=3.1.1",
+                  pynq_version = "pynq>=3.1.1,<4.0.0",
                   board = os.environ['BOARD'])
