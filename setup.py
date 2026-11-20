@@ -82,7 +82,7 @@ class package_installer():
               version=self.version,
               install_requires=[
                   self.pynq_version,
-                  "pynqmetadata==0.1.8",
+                  "pynqmetadata<0.2.0",
               ],
               url=self.url,
               license=self.license,
